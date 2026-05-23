@@ -1,8 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  AnimatePresence,
+  useReducedMotion,
+} from "framer-motion";
 import { SAMPLES } from "@/lib/samples";
+import { useSound } from "./SoundProvider";
+import CefrMedal from "./CefrMedal";
 
 type DifficultWord = {
   word: string;
@@ -20,17 +26,17 @@ type AnalysisResult = {
   simpler_version: string | null;
 };
 
-const LEVEL_COLORS: Record<string, string> = {
-  A1: "bg-green-100 text-green-800 border-green-300",
-  A2: "bg-emerald-100 text-emerald-800 border-emerald-300",
-  B1: "bg-blue-100 text-blue-800 border-blue-300",
-  B2: "bg-indigo-100 text-indigo-800 border-indigo-300",
-  C1: "bg-purple-100 text-purple-800 border-purple-300",
-  C2: "bg-rose-100 text-rose-800 border-rose-300",
+const LEVEL_INK: Record<string, string> = {
+  A1: "#3f9d4a",
+  A2: "#1f8a6b",
+  B1: "#2b6cb0",
+  B2: "#4338ca",
+  C1: "#7c3aed",
+  C2: "#c4302b",
 };
 
-function levelClass(level: string) {
-  return LEVEL_COLORS[level] || "bg-gray-100 text-gray-800 border-gray-300";
+function levelDot(level: string) {
+  return LEVEL_INK[level] || "#6b7280";
 }
 
 function HighlightedText({
@@ -40,6 +46,7 @@ function HighlightedText({
   text: string;
   difficultWords: DifficultWord[];
 }) {
+  const reduce = useReducedMotion();
   const lookup = useMemo(() => {
     const m = new Map<string, DifficultWord>();
     for (const w of difficultWords) {
@@ -60,22 +67,22 @@ function HighlightedText({
           <motion.span
             key={i}
             title={`${hit.translation}${hit.note ? " — " + hit.note : ""} (${hit.level})`}
-            initial={{ backgroundColor: "rgba(253, 230, 138, 0)" }}
-            animate={{ backgroundColor: "rgba(253, 230, 138, 0)" }}
-            whileHover={{
-              backgroundColor: "rgba(253, 230, 138, 0.6)",
-              scale: 1.05,
-              y: -2,
-              transition: { duration: 0.15 },
+            whileHover={
+              reduce
+                ? undefined
+                : { y: -2, scale: 1.05, transition: { type: "spring", stiffness: 400, damping: 14 } }
+            }
+            style={{
+              display: "inline-block",
+              color: levelDot(hit.level),
+              textDecoration: "underline",
+              textDecorationStyle: "dotted",
+              textDecorationThickness: "2px",
+              textUnderlineOffset: "4px",
+              cursor: "help",
+              borderRadius: "4px",
+              padding: "0 2px",
             }}
-            style={{ display: "inline-block", transformStyle: "preserve-3d" }}
-            className={`underline decoration-dotted decoration-2 cursor-help underline-offset-4 rounded px-0.5 ${
-              hit.level === "C2" || hit.level === "C1"
-                ? "decoration-rose-500"
-                : hit.level === "B2" || hit.level === "B1"
-                ? "decoration-blue-500"
-                : "decoration-emerald-500"
-            }`}
           >
             {tok}
           </motion.span>
@@ -85,7 +92,22 @@ function HighlightedText({
   );
 }
 
+const stagger = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.06, delayChildren: 0.45 } },
+};
+const item = {
+  hidden: { opacity: 0, y: 16 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring" as const, stiffness: 220, damping: 22 },
+  },
+};
+
 export default function TextAnalyzer() {
+  const reduce = useReducedMotion();
+  const { play } = useSound();
   const [text, setText] = useState("");
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -106,10 +128,11 @@ export default function TextAnalyzer() {
         body: JSON.stringify({ text }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || "Failed");
+      if (!res.ok) throw new Error(data.error || "Échec de l'analyse");
       setResult(data);
+      play("tink");
     } catch (e) {
-      setError(e instanceof Error ? e.message : "Something went wrong");
+      setError(e instanceof Error ? e.message : "Quelque chose s'est mal passé");
     } finally {
       setLoading(false);
     }
@@ -131,250 +154,299 @@ export default function TextAnalyzer() {
   function copyResult() {
     if (!result) return;
     const lines = [
-      `Level: ${result.level} (${result.confidence}% confidence)`,
+      `Niveau : ${result.level} (${result.confidence}%)`,
       result.summary,
       "",
-      "Difficult words:",
+      "Mots difficiles :",
       ...result.difficult_words.map(
         (w) => `  ${w.word} — ${w.translation} [${w.level}]`
       ),
       "",
-      "Grammar:",
+      "Grammaire :",
       ...result.grammar_features.map((g) => `  ${g.feature} — "${g.example}"`),
     ];
     if (result.simpler_version) {
-      lines.push("", "Simpler version:", result.simpler_version);
+      lines.push("", "Version simplifiée :", result.simpler_version);
     }
     navigator.clipboard.writeText(lines.join("\n"));
     setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+    play("tock");
+    setTimeout(() => setCopied(false), 1600);
   }
 
   return (
-    <div className="w-full max-w-3xl mx-auto" style={{ perspective: 1200 }}>
-      <div className="flex flex-wrap gap-2 mb-3">
-        <span className="text-xs text-gray-500 self-center mr-1">
-          Try a sample:
+    <div className="w-full max-w-3xl mx-auto" style={{ perspective: 1400 }}>
+      {/* Sample chips */}
+      <div className="flex flex-wrap gap-2 mb-4 items-center">
+        <span className="text-xs ink-faint uppercase tracking-wider mr-1">
+          Essayer un exemple
         </span>
         {SAMPLES.map((s, i) => (
           <motion.button
             key={s.label}
-            onClick={() => setText(s.text)}
-            initial={{ opacity: 0, y: 10, rotateX: -30 }}
+            onClick={() => {
+              setText(s.text);
+              play("tock");
+            }}
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 8, rotateX: -20 }}
             animate={{ opacity: 1, y: 0, rotateX: 0 }}
-            transition={{ delay: 0.1 + i * 0.08, type: "spring", stiffness: 200 }}
-            whileHover={{ y: -3, rotateX: 10, scale: 1.05 }}
-            whileTap={{ scale: 0.95, rotateX: -5 }}
+            transition={{
+              delay: 0.15 + i * 0.07,
+              type: "spring",
+              stiffness: 240,
+              damping: 18,
+            }}
+            whileHover={
+              reduce ? undefined : { y: -3, rotateX: 6, transition: { type: "spring", stiffness: 360, damping: 16 } }
+            }
+            whileTap={reduce ? undefined : { y: 1, rotateX: -2 }}
             style={{ transformStyle: "preserve-3d" }}
-            className={`text-xs px-3 py-1.5 rounded border ${levelClass(s.level)} shadow-sm`}
+            className="tactile-chip text-xs px-3 py-1.5 flex items-center gap-2"
           >
-            {s.label}
+            <span
+              className="inline-block w-2 h-2 rounded-full"
+              style={{
+                background: levelDot(s.level),
+                boxShadow: "0 1px 0 rgba(255,255,255,0.5) inset, 0 1px 2px rgba(0,0,0,0.2)",
+              }}
+            />
+            <span className="ink-strong">{s.label}</span>
           </motion.button>
         ))}
       </div>
 
-      <motion.textarea
-        ref={textareaRef}
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        placeholder="Paste any French text here... (Cmd/Ctrl+Enter to analyze)"
-        whileFocus={{ scale: 1.005, boxShadow: "0 8px 30px rgba(59,130,246,0.15)" }}
-        className="w-full h-48 p-4 border rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-        maxLength={3000}
-      />
-      <div className="flex justify-between items-center mt-2">
-        <span className="text-sm text-gray-500">{text.length}/3000</span>
-        <motion.button
-          onClick={analyze}
-          disabled={loading || !text.trim()}
-          whileHover={{ scale: 1.05, rotateX: 8, y: -2 }}
-          whileTap={{ scale: 0.95, rotateX: -8 }}
-          style={{ transformStyle: "preserve-3d" }}
-          className="px-6 py-2 bg-blue-600 text-white rounded-lg disabled:opacity-50 hover:bg-blue-700 shadow-md"
-        >
-          {loading ? "Analyzing..." : "Check Level"}
-        </motion.button>
-      </div>
+      {/* Textarea card */}
+      <motion.div
+        initial={reduce ? { opacity: 0 } : { opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ type: "spring", stiffness: 180, damping: 22, delay: 0.1 }}
+        className="tactile-card p-1.5"
+      >
+        <textarea
+          ref={textareaRef}
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          placeholder="Collez votre texte français ici…  (Cmd/Ctrl + Entrée pour analyser)"
+          maxLength={3000}
+          className="w-full h-48 p-4 bg-transparent resize-none font-mono text-sm ink-strong focus:outline-none placeholder:ink-faint"
+        />
+        <div className="flex justify-between items-center px-3 pb-2 pt-1">
+          <span className="text-xs ink-faint tabular-nums">
+            {text.length} / 3000
+          </span>
+          <motion.button
+            onClick={analyze}
+            disabled={loading || !text.trim()}
+            whileHover={
+              reduce || loading || !text.trim()
+                ? undefined
+                : { y: -2, transition: { type: "spring", stiffness: 400, damping: 16 } }
+            }
+            whileTap={
+              reduce || loading || !text.trim() ? undefined : { y: 2 }
+            }
+            className="tactile-button px-5 py-2 text-sm"
+          >
+            {loading ? "Lecture en cours…" : "Révéler le niveau →"}
+          </motion.button>
+        </div>
+      </motion.div>
 
       <AnimatePresence>
         {error && (
           <motion.p
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0 }}
-            className="text-red-600 mt-4 p-3 bg-red-50 rounded border border-red-200"
+            transition={{ type: "spring", stiffness: 300, damping: 22 }}
+            className="mt-4 p-3 rounded text-sm"
+            style={{
+              background: "color-mix(in srgb, var(--accent) 12%, var(--surface))",
+              color: "var(--accent)",
+              boxShadow: "var(--shadow-inset)",
+            }}
           >
             {error}
           </motion.p>
         )}
       </AnimatePresence>
 
+      {/* Loading state */}
       <AnimatePresence>
         {loading && (
           <motion.div
-            initial={{ opacity: 0, rotateX: -15, y: 20 }}
-            animate={{ opacity: 1, rotateX: 0, y: 0 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 100 }}
-            style={{ transformStyle: "preserve-3d" }}
-            className="mt-8 p-6 border rounded-lg bg-gray-50"
+            initial={reduce ? { opacity: 0 } : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.97 }}
+            transition={{ type: "spring", stiffness: 160, damping: 22 }}
+            className="tactile-card mt-8 p-8 flex flex-col items-center"
           >
             <motion.div
-              animate={{ opacity: [0.4, 1, 0.4] }}
-              transition={{ duration: 1.4, repeat: Infinity }}
-            >
-              <div className="h-12 w-32 bg-gray-200 rounded mb-4"></div>
-              <div className="h-4 bg-gray-200 rounded mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded w-3/4 mb-6"></div>
-              <div className="h-4 bg-gray-200 rounded mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded w-5/6"></div>
-            </motion.div>
+              animate={
+                reduce
+                  ? undefined
+                  : { rotate: 360, scale: [1, 1.08, 1] }
+              }
+              transition={{
+                rotate: { duration: 2.8, repeat: Infinity, ease: "linear" },
+                scale: { duration: 1.6, repeat: Infinity },
+              }}
+              className="w-16 h-16 rounded-full mb-4"
+              style={{
+                background:
+                  "conic-gradient(from 0deg, var(--accent) 0%, var(--accent-2) 50%, var(--accent) 100%)",
+                boxShadow: "var(--shadow-medal)",
+              }}
+            />
+            <p className="ink-soft text-sm italic">Lecture en cours…</p>
           </motion.div>
         )}
       </AnimatePresence>
 
+      {/* Result */}
       <AnimatePresence>
         {result && (
           <motion.div
-            initial={{ opacity: 0, rotateX: -25, y: 40 }}
-            animate={{ opacity: 1, rotateX: 0, y: 0 }}
-            exit={{ opacity: 0, rotateX: 25, y: -20 }}
-            transition={{ type: "spring", stiffness: 80, damping: 14 }}
-            style={{ transformStyle: "preserve-3d" }}
-            className="mt-8 p-6 border rounded-lg bg-gray-50 shadow-xl"
+            key="result"
+            variants={stagger}
+            initial="hidden"
+            animate="show"
+            exit={{ opacity: 0, y: -20, transition: { duration: 0.25 } }}
+            className="mt-10"
           >
-            <div className="flex items-start justify-between gap-4 mb-4">
-              <div className="flex items-baseline gap-3">
-                <motion.span
-                  initial={{ scale: 0, rotateY: 180 }}
-                  animate={{ scale: 1, rotateY: 0 }}
-                  transition={{
-                    delay: 0.2,
-                    type: "spring",
-                    stiffness: 150,
-                    damping: 12,
-                  }}
-                  style={{ transformStyle: "preserve-3d", display: "inline-block" }}
-                  className={`text-4xl font-bold px-4 py-1 rounded-lg border ${levelClass(result.level)} shadow-md`}
+            {/* Hero medal */}
+            <CefrMedal level={result.level} confidence={result.confidence} />
+
+            {/* Summary card */}
+            <motion.div variants={item} className="tactile-card mt-2 p-5">
+              <p className="ink-strong leading-relaxed">{result.summary}</p>
+              <div className="flex justify-end mt-3">
+                <motion.button
+                  onClick={copyResult}
+                  whileHover={reduce ? undefined : { y: -1 }}
+                  whileTap={reduce ? undefined : { y: 1 }}
+                  className="tactile-chip text-xs px-3 py-1.5 ink-strong"
                 >
-                  {result.level}
-                </motion.span>
-                <motion.span
-                  initial={{ opacity: 0, x: -10 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: 0.5 }}
-                  className="text-gray-600"
-                >
-                  {result.confidence}% confidence
-                </motion.span>
+                  {copied ? "Copié !" : "Copier le résultat"}
+                </motion.button>
               </div>
-              <motion.button
-                onClick={copyResult}
-                whileHover={{ scale: 1.05, y: -1 }}
-                whileTap={{ scale: 0.95 }}
-                className="text-xs px-3 py-1.5 border rounded hover:bg-white"
-              >
-                {copied ? "Copied!" : "Copy result"}
-              </motion.button>
-            </div>
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.4 }}
-              className="mb-6"
-            >
-              {result.summary}
-            </motion.p>
+            </motion.div>
 
             {result.difficult_words.length > 0 && (
-              <motion.div
-                initial={{ opacity: 0, y: 20, rotateX: -10 }}
-                animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                transition={{ delay: 0.5 }}
-                style={{ transformStyle: "preserve-3d" }}
-                className="mb-6"
-              >
-                <h3 className="font-semibold mb-2">
-                  Your text (hover the highlighted words)
+              <motion.section variants={item} className="tactile-card mt-5 p-5">
+                <h3 className="text-xs uppercase tracking-wider ink-faint mb-3">
+                  Votre texte
                 </h3>
-                <div className="p-3 bg-white border rounded text-sm">
+                <div className="tactile-inset p-4 text-sm">
                   <HighlightedText
                     text={text}
                     difficultWords={result.difficult_words}
                   />
                 </div>
-              </motion.div>
+              </motion.section>
             )}
 
             {result.difficult_words.length > 0 && (
-              <div className="mb-6">
-                <h3 className="font-semibold mb-2">Difficult words</h3>
-                <ul className="space-y-1">
+              <motion.section variants={item} className="tactile-card mt-5 p-5">
+                <h3 className="text-xs uppercase tracking-wider ink-faint mb-4">
+                  Mots difficiles
+                </h3>
+                <motion.ul
+                  variants={{
+                    hidden: {},
+                    show: { transition: { staggerChildren: 0.05 } },
+                  }}
+                  initial="hidden"
+                  animate="show"
+                  className="grid sm:grid-cols-2 gap-2"
+                >
                   {result.difficult_words.map((w, i) => (
                     <motion.li
                       key={i}
-                      initial={{ opacity: 0, x: -20, rotateY: -15 }}
-                      animate={{ opacity: 1, x: 0, rotateY: 0 }}
-                      transition={{ delay: 0.6 + i * 0.05 }}
-                      style={{ transformStyle: "preserve-3d" }}
-                      className="text-sm"
+                      variants={item}
+                      whileHover={reduce ? undefined : { y: -2 }}
+                      className="tactile-inset p-3 text-sm flex items-baseline gap-2"
                     >
-                      <span className="font-mono font-semibold">{w.word}</span>
-                      <span className="text-gray-600"> — {w.translation}</span>
                       <span
-                        className={`ml-2 px-2 py-0.5 rounded text-xs border ${levelClass(w.level)}`}
-                      >
-                        {w.level}
-                      </span>
-                      {w.note && (
-                        <span className="text-gray-500 italic"> · {w.note}</span>
-                      )}
+                        className="inline-block w-2 h-2 rounded-full flex-shrink-0"
+                        style={{
+                          background: levelDot(w.level),
+                          boxShadow:
+                            "0 1px 0 rgba(255,255,255,0.5) inset, 0 1px 2px rgba(0,0,0,0.2)",
+                          transform: "translateY(-1px)",
+                        }}
+                      />
+                      <div className="min-w-0">
+                        <div>
+                          <span className="font-mono font-semibold ink-strong">
+                            {w.word}
+                          </span>
+                          <span className="ink-soft"> — {w.translation}</span>
+                          <span
+                            className="ml-1 text-xs ink-faint tabular-nums"
+                            style={{ color: levelDot(w.level) }}
+                          >
+                            {w.level}
+                          </span>
+                        </div>
+                        {w.note && (
+                          <div className="ink-faint italic text-xs mt-0.5">
+                            {w.note}
+                          </div>
+                        )}
+                      </div>
                     </motion.li>
                   ))}
-                </ul>
-              </div>
+                </motion.ul>
+              </motion.section>
             )}
 
             {result.grammar_features.length > 0 && (
-              <div className="mb-6">
-                <h3 className="font-semibold mb-2">Grammar features</h3>
-                <ul className="space-y-1 text-sm">
+              <motion.section variants={item} className="tactile-card mt-5 p-5">
+                <h3 className="text-xs uppercase tracking-wider ink-faint mb-4">
+                  Points de grammaire
+                </h3>
+                <ul className="space-y-2 text-sm">
                   {result.grammar_features.map((g, i) => (
                     <motion.li
                       key={i}
-                      initial={{ opacity: 0, x: 20, rotateY: 15 }}
-                      animate={{ opacity: 1, x: 0, rotateY: 0 }}
-                      transition={{ delay: 0.7 + i * 0.05 }}
-                      style={{ transformStyle: "preserve-3d" }}
+                      variants={item}
+                      className="flex items-baseline gap-3"
                     >
-                      <span className="font-semibold">{g.feature}</span>
-                      <span className="text-gray-600">
-                        {" "}
-                        — &quot;{g.example}&quot;
-                      </span>
                       <span
-                        className={`ml-2 px-2 py-0.5 rounded text-xs border ${levelClass(g.level)}`}
-                      >
-                        {g.level}
-                      </span>
+                        className="inline-block w-2 h-2 rounded-full flex-shrink-0 mt-1.5"
+                        style={{
+                          background: levelDot(g.level),
+                          boxShadow:
+                            "0 1px 0 rgba(255,255,255,0.5) inset, 0 1px 2px rgba(0,0,0,0.2)",
+                        }}
+                      />
+                      <div>
+                        <span className="font-semibold ink-strong">
+                          {g.feature}
+                        </span>
+                        <span className="ink-soft"> — </span>
+                        <span className="ink-soft italic">
+                          &laquo;&nbsp;{g.example}&nbsp;&raquo;
+                        </span>
+                      </div>
                     </motion.li>
                   ))}
                 </ul>
-              </div>
+              </motion.section>
             )}
 
             {result.simpler_version && (
-              <motion.div
-                initial={{ opacity: 0, y: 30, rotateX: -15 }}
-                animate={{ opacity: 1, y: 0, rotateX: 0 }}
-                transition={{ delay: 0.9, type: "spring" }}
-                style={{ transformStyle: "preserve-3d" }}
-              >
-                <h3 className="font-semibold mb-2">Simpler version</h3>
-                <p className="italic p-3 bg-white border rounded shadow-inner">
+              <motion.section variants={item} className="tactile-card mt-5 p-5">
+                <h3 className="text-xs uppercase tracking-wider ink-faint mb-3">
+                  Version simplifiée
+                </h3>
+                <p
+                  className="tactile-inset p-4 italic ink-strong leading-relaxed"
+                >
                   {result.simpler_version}
                 </p>
-              </motion.div>
+              </motion.section>
             )}
           </motion.div>
         )}

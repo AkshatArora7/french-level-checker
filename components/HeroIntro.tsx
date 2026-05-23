@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 
 export default function HeroIntro({
   title,
@@ -9,22 +9,23 @@ export default function HeroIntro({
   title: string;
   subtitle: string;
 }) {
+  const reduce = useReducedMotion();
   return (
-    <div style={{ perspective: 1000 }}>
+    <div style={{ perspective: 1200 }} className="mb-10">
       <motion.h1
-        initial={{ opacity: 0, y: -20, rotateX: -40 }}
+        initial={reduce ? { opacity: 0 } : { opacity: 0, y: -16, rotateX: -35 }}
         animate={{ opacity: 1, y: 0, rotateX: 0 }}
-        transition={{ type: "spring", stiffness: 120, damping: 14 }}
-        style={{ transformStyle: "preserve-3d", transformOrigin: "top" }}
-        className="text-4xl font-bold mb-2"
+        transition={{ type: "spring", stiffness: 130, damping: 16, mass: 0.8 }}
+        style={{ transformOrigin: "top center", transformStyle: "preserve-3d" }}
+        className="text-4xl sm:text-5xl font-extrabold tracking-tight ink-strong"
       >
         {title}
       </motion.h1>
       <motion.p
-        initial={{ opacity: 0, y: 10 }}
+        initial={reduce ? { opacity: 0 } : { opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 }}
-        className="text-gray-600 mb-8"
+        transition={{ delay: 0.18, type: "spring", stiffness: 160, damping: 18 }}
+        className="ink-soft mt-3 text-base sm:text-lg leading-relaxed max-w-xl"
       >
         {subtitle}
       </motion.p>

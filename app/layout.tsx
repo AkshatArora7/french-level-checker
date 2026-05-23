@@ -4,6 +4,9 @@ import { Analytics } from "@vercel/analytics/react";
 import Link from "next/link";
 import "./globals.css";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
+import { SkinProvider } from "@/components/SkinProvider";
+import { SoundProvider } from "@/components/SoundProvider";
+import SkinToggle from "@/components/SkinToggle";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,11 +36,16 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: `${SITE_NAME}`,
+    title: SITE_NAME,
     description:
       "Paste any French text. Get its CEFR level (A1-C2), see what makes it difficult, and get a simpler version.",
   },
 };
+
+// Inline script: read the saved skin BEFORE first paint so we don't flash the default.
+const skinBootstrap = `
+(function(){try{var s=localStorage.getItem('flc-skin');if(s==='cafe'||s==='atelier'||s==='metro'){document.documentElement.setAttribute('data-skin',s)}else{document.documentElement.setAttribute('data-skin','cafe')}}catch(e){document.documentElement.setAttribute('data-skin','cafe')}})();
+`;
 
 export default function RootLayout({
   children,
@@ -47,22 +55,32 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      data-skin="cafe"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: skinBootstrap }} />
+      </head>
       <body className="min-h-full flex flex-col">
-        {children}
-        <footer className="mt-auto py-8 px-8 text-sm text-gray-500 border-t">
-          <div className="max-w-3xl mx-auto flex flex-wrap gap-4 justify-between">
-            <span>© {new Date().getFullYear()} French Level Checker</span>
-            <nav className="flex gap-4">
-              <Link href="/" className="hover:text-gray-900">Home</Link>
-              <Link href="/blog" className="hover:text-gray-900">Blog</Link>
-              <Link href="/cefr-checker" className="hover:text-gray-900">CEFR</Link>
-              <Link href="/french-reading-level" className="hover:text-gray-900">Reading level</Link>
-            </nav>
-          </div>
-        </footer>
-        <Analytics />
+        <SkinProvider>
+          <SoundProvider>
+            <SkinToggle />
+            {children}
+            <footer className="mt-auto py-8 px-8 text-sm ink-faint border-t" style={{ borderColor: "var(--border)" }}>
+              <div className="max-w-3xl mx-auto flex flex-wrap gap-4 justify-between">
+                <span>© {new Date().getFullYear()} {SITE_NAME}</span>
+                <nav className="flex gap-4">
+                  <Link href="/" className="hover:opacity-80">Accueil</Link>
+                  <Link href="/blog" className="hover:opacity-80">Blog</Link>
+                  <Link href="/cefr-checker" className="hover:opacity-80">CEFR</Link>
+                  <Link href="/french-reading-level" className="hover:opacity-80">Lecture</Link>
+                </nav>
+              </div>
+            </footer>
+            <Analytics />
+          </SoundProvider>
+        </SkinProvider>
       </body>
     </html>
   );
