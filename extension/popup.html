@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>French Level Checker</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <header>
+      <span class="title">French Level Checker</span>
+      <a id="open-site" href="#" target="_blank" rel="noopener">Open site →</a>
+    </header>
+
+    <main>
+      <textarea
+        id="text"
+        placeholder="Collez votre texte français ici… or right-click a selection on any page."
+        maxlength="3000"
+        rows="6"
+      ></textarea>
+      <div class="row">
+        <span id="count" class="count">0 / 3000</span>
+        <button id="go" class="primary">Révéler le niveau →</button>
+      </div>
+
+      <div id="status" class="hidden"></div>
+      <div id="result" class="hidden"></div>
+    </main>
+
+    <footer>
+      <details>
+        <summary>Settings</summary>
+        <label>
+          API URL
+          <input id="api-url" type="url" />
+        </label>
+        <button id="save-settings">Save</button>
+        <span id="saved" class="saved hidden">Saved!</span>
+      </details>
+    </footer>
+
+    <script src="popup.js"></script>
+  </body>
+</html>

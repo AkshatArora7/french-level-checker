@@ -1,0 +1,18 @@
+{
+  "manifest_version": 3,
+  "name": "French Level Checker",
+  "version": "0.1.0",
+  "description": "Highlight any French text on a webpage to get its CEFR level (A1-C2), difficult words, and a simpler version.",
+  "action": {
+    "default_title": "French Level Checker",
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "permissions": ["contextMenus", "storage", "activeTab", "scripting"],
+  "host_permissions": [
+    "https://french.aatechax.com/*",
+    "https://*.vercel.app/*"
+  ]
+}
