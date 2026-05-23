@@ -72,9 +72,9 @@ export default function RootLayout({
                 <span>© {new Date().getFullYear()} {SITE_NAME}</span>
                 <nav className="flex gap-4">
                   <Link href="/" className="hover:opacity-80">Accueil</Link>
+                  <Link href="/learn" className="hover:opacity-80">Apprendre</Link>
                   <Link href="/blog" className="hover:opacity-80">Blog</Link>
                   <Link href="/cefr-checker" className="hover:opacity-80">CEFR</Link>
-                  <Link href="/french-reading-level" className="hover:opacity-80">Lecture</Link>
                 </nav>
               </div>
             </footer>

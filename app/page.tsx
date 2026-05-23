@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import TextAnalyzer from "@/components/TextAnalyzer";
 import HeroIntro from "@/components/HeroIntro";
 import Link from "next/link";
@@ -60,17 +61,32 @@ export default function Home() {
           title="French Level Checker"
           subtitle="Paste any French text. Get its CEFR level (A1-C2), see what makes it difficult, and get a simpler version. Free, no signup."
         />
-        <TextAnalyzer />
+        <Suspense fallback={null}>
+          <TextAnalyzer />
+        </Suspense>
 
         <section className="mt-16">
           <h2 className="text-2xl font-semibold mb-4">Popular checks</h2>
-          <ul className="grid sm:grid-cols-2 gap-2 text-blue-600">
+          <ul className="grid sm:grid-cols-2 gap-2">
             <li><Link href="/cefr-checker" className="hover:underline">French CEFR checker</Link></li>
             <li><Link href="/french-reading-level" className="hover:underline">French reading level analyzer</Link></li>
             <li><Link href="/is-this-french-a2" className="hover:underline">Is this French A2?</Link></li>
             <li><Link href="/is-this-french-b1" className="hover:underline">Is this French B1?</Link></li>
             <li><Link href="/is-this-french-b2" className="hover:underline">Is this French B2?</Link></li>
             <li><Link href="/french-text-analyzer" className="hover:underline">French text analyzer</Link></li>
+          </ul>
+        </section>
+
+        <section className="mt-12">
+          <h2 className="text-2xl font-semibold mb-4 ink-strong">Learn by level</h2>
+          <p className="ink-soft mb-3 text-sm">Plain-English guides to every CEFR level for French.</p>
+          <ul className="grid grid-cols-3 sm:grid-cols-6 gap-2">
+            <li><Link href="/learn/a1-french" className="tactile-chip block text-center px-3 py-2 font-semibold ink-strong">A1</Link></li>
+            <li><Link href="/learn/a2-french" className="tactile-chip block text-center px-3 py-2 font-semibold ink-strong">A2</Link></li>
+            <li><Link href="/learn/b1-french" className="tactile-chip block text-center px-3 py-2 font-semibold ink-strong">B1</Link></li>
+            <li><Link href="/learn/b2-french" className="tactile-chip block text-center px-3 py-2 font-semibold ink-strong">B2</Link></li>
+            <li><Link href="/learn/c1-french" className="tactile-chip block text-center px-3 py-2 font-semibold ink-strong">C1</Link></li>
+            <li><Link href="/learn/c2-french" className="tactile-chip block text-center px-3 py-2 font-semibold ink-strong">C2</Link></li>
           </ul>
         </section>
 

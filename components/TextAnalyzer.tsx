@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   motion,
   AnimatePresence,
@@ -108,7 +109,14 @@ const item = {
 export default function TextAnalyzer() {
   const reduce = useReducedMotion();
   const { play } = useSound();
+  const searchParams = useSearchParams();
   const [text, setText] = useState("");
+
+  useEffect(() => {
+    const s = searchParams.get("sample");
+    if (s) setText(s);
+  }, [searchParams]);
+
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");

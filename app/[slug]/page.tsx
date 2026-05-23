@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { SEO_PAGES } from "@/lib/seo-pages";
 import TextAnalyzer from "@/components/TextAnalyzer";
 import HeroIntro from "@/components/HeroIntro";
@@ -40,7 +41,9 @@ export default async function SeoPage(
         <div className="mt-4">
           <HeroIntro title={page.h1} subtitle={page.intro} />
         </div>
-        <TextAnalyzer />
+        <Suspense fallback={null}>
+          <TextAnalyzer />
+        </Suspense>
       </div>
     </main>
   );
