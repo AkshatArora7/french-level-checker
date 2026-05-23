@@ -1,4 +1,5 @@
 import TextAnalyzer from "@/components/TextAnalyzer";
+import HeroIntro from "@/components/HeroIntro";
 import Link from "next/link";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 
@@ -55,11 +56,10 @@ export default function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
       />
       <div className="max-w-3xl mx-auto">
-        <h1 className="text-4xl font-bold mb-2">French Level Checker</h1>
-        <p className="text-gray-600 mb-8">
-          Paste any French text. Get its CEFR level (A1-C2), see what makes it
-          difficult, and get a simpler version. Free, no signup.
-        </p>
+        <HeroIntro
+          title="French Level Checker"
+          subtitle="Paste any French text. Get its CEFR level (A1-C2), see what makes it difficult, and get a simpler version. Free, no signup."
+        />
         <TextAnalyzer />
 
         <section className="mt-16">
