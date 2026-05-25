@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { BLOG_POSTS } from "@/lib/blog";
 import type { Metadata } from "next";
+import { SITE_URL } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "French Learning Blog — French Level Checker",
   description:
     "Practical articles about CEFR levels, reading material, and breaking through the B1 plateau in French.",
+  alternates: { canonical: `${SITE_URL}/blog` },
 };
 
 export default function BlogIndex() {

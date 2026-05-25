@@ -47,6 +47,18 @@ export const metadata: Metadata = {
     description:
       "Paste any French text. Get its CEFR level (A1-C2), see what makes it difficult, and get a simpler version.",
   },
+  alternates: {
+    canonical: SITE_URL,
+    languages: {
+      "en": SITE_URL,
+      "fr": SITE_URL,
+      "x-default": SITE_URL,
+    },
+  },
+  verification: {
+    // Paste your Search Console verification code here (Settings → Verification → HTML tag)
+    google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION,
+  },
 };
 
 // Inline script: read the saved skin BEFORE first paint so we don't flash the default.

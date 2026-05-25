@@ -3,10 +3,13 @@ import type { Metadata } from "next";
 import { LEARN_LEVELS } from "@/lib/learn-levels";
 import HeroIntro from "@/components/HeroIntro";
 
+import { SITE_URL } from "@/lib/site";
+
 export const metadata: Metadata = {
   title: "Learn French by CEFR Level — A1 to C2 Guides",
   description:
     "Plain-English guides to every CEFR level for French: A1, A2, B1, B2, C1, C2. What it means, what you can do, and how to get there.",
+  alternates: { canonical: `${SITE_URL}/learn` },
 };
 
 const LEVEL_INK: Record<string, string> = {
