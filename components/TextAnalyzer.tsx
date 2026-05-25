@@ -6,7 +6,7 @@ import {
   motion,
   AnimatePresence,
   useReducedMotion,
-} from "framer-motion";
+} from "motion/react";
 import { SAMPLES } from "@/lib/samples";
 import { useSound } from "./SoundProvider";
 import CefrMedal from "./CefrMedal";

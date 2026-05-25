@@ -1,12 +1,13 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
 import Link from "next/link";
 import "./globals.css";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 import { SkinProvider } from "@/components/SkinProvider";
 import { SoundProvider } from "@/components/SoundProvider";
-import SkinToggle from "@/components/SkinToggle";
+import { VocabProvider } from "@/components/VocabProvider";
+import SiteNav from "@/components/SiteNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -15,6 +16,12 @@ const geistSans = Geist({
 
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const poppins = Poppins({
+  variable: "--font-poppins",
+  weight: ["500", "600", "700"],
   subsets: ["latin"],
 });
 
@@ -44,7 +51,7 @@ export const metadata: Metadata = {
 
 // Inline script: read the saved skin BEFORE first paint so we don't flash the default.
 const skinBootstrap = `
-(function(){try{var s=localStorage.getItem('flc-skin');if(s==='cafe'||s==='atelier'||s==='metro'){document.documentElement.setAttribute('data-skin',s)}else{document.documentElement.setAttribute('data-skin','cafe')}}catch(e){document.documentElement.setAttribute('data-skin','cafe')}})();
+(function(){try{var s=localStorage.getItem('flc-skin');if(s==='aatech'||s==='cafe'||s==='atelier'||s==='metro'){document.documentElement.setAttribute('data-skin',s)}else{document.documentElement.setAttribute('data-skin','aatech')}}catch(e){document.documentElement.setAttribute('data-skin','aatech')}})();
 `;
 
 export default function RootLayout({
@@ -55,9 +62,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      data-skin="cafe"
+      data-skin="aatech"
       suppressHydrationWarning
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${geistSans.variable} ${geistMono.variable} ${poppins.variable} h-full antialiased`}
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: skinBootstrap }} />
@@ -65,20 +72,67 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <SkinProvider>
           <SoundProvider>
-            <SkinToggle />
-            {children}
-            <footer className="mt-auto py-8 px-8 text-sm ink-faint border-t" style={{ borderColor: "var(--border)" }}>
-              <div className="max-w-3xl mx-auto flex flex-wrap gap-4 justify-between">
-                <span>© {new Date().getFullYear()} {SITE_NAME}</span>
-                <nav className="flex gap-4">
-                  <Link href="/" className="hover:opacity-80">Accueil</Link>
-                  <Link href="/learn" className="hover:opacity-80">Apprendre</Link>
-                  <Link href="/blog" className="hover:opacity-80">Blog</Link>
-                  <Link href="/cefr-checker" className="hover:opacity-80">CEFR</Link>
-                </nav>
-              </div>
-            </footer>
-            <Analytics />
+            <VocabProvider>
+              <SiteNav />
+              <div className="h-14 sm:h-16" aria-hidden />
+              {children}
+              <footer
+                className="mt-auto"
+                style={{
+                  background: "color-mix(in srgb, var(--ink) 96%, transparent)",
+                  color: "color-mix(in srgb, var(--accent-ink) 80%, var(--ink-faint))",
+                }}
+              >
+                <div
+                  className="h-px w-full"
+                  style={{
+                    background:
+                      "linear-gradient(90deg, transparent, color-mix(in srgb, var(--accent) 60%, transparent), transparent)",
+                  }}
+                />
+                <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-8">
+                    <div className="max-w-sm">
+                      <Link href="/" className="inline-flex items-center gap-2 group">
+                        <span
+                          className="text-xl font-bold tracking-tight"
+                          style={{ fontFamily: "var(--font-poppins), system-ui", color: "#fff" }}
+                        >
+                          FLC
+                        </span>
+                        <span
+                          aria-hidden
+                          className="h-1.5 w-1.5 rounded-full transition-transform duration-300 group-hover:scale-150"
+                          style={{ background: "var(--accent)" }}
+                        />
+                      </Link>
+                      <p className="text-sm leading-relaxed mt-3 opacity-70">
+                        French CEFR level checker, daily Wordle, daily word, and a personal
+                        vocabulary trainer. Free, no signup.
+                      </p>
+                    </div>
+                    <nav className="flex flex-wrap gap-x-6 gap-y-2 text-sm">
+                      <Link href="/" className="opacity-70 hover:opacity-100 transition-opacity">Analyser</Link>
+                      <Link href="/jeu" className="opacity-70 hover:opacity-100 transition-opacity">Wordle</Link>
+                      <Link href="/mot-du-jour" className="opacity-70 hover:opacity-100 transition-opacity">Mot du jour</Link>
+                      <Link href="/vocab" className="opacity-70 hover:opacity-100 transition-opacity">Carnet</Link>
+                      <Link href="/learn" className="opacity-70 hover:opacity-100 transition-opacity">Apprendre</Link>
+                      <Link href="/blog" className="opacity-70 hover:opacity-100 transition-opacity">Blog</Link>
+                      <Link href="/extension" className="opacity-70 hover:opacity-100 transition-opacity">Extension</Link>
+                      <Link href="/privacy" className="opacity-70 hover:opacity-100 transition-opacity">Privacy</Link>
+                    </nav>
+                  </div>
+                  <div
+                    className="mt-10 pt-6 text-xs opacity-60 flex flex-wrap items-center justify-between gap-2"
+                    style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
+                  >
+                    <span>© {new Date().getFullYear()} {SITE_NAME}</span>
+                    <span>Built with Next.js, Tailwind & Motion</span>
+                  </div>
+                </div>
+              </footer>
+              <Analytics />
+            </VocabProvider>
           </SoundProvider>
         </SkinProvider>
       </body>

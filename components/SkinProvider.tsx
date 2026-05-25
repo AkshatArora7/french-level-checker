@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
 import { DEFAULT_SKIN, isSkinId, nextSkin, SkinId } from "@/lib/skins";

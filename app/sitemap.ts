@@ -8,6 +8,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
   const entries: MetadataRoute.Sitemap = [
     { url: `${SITE_URL}/`, lastModified: now, priority: 1 },
+    { url: `${SITE_URL}/extension`, lastModified: now, priority: 0.9 },
+    { url: `${SITE_URL}/jeu`, lastModified: now, priority: 0.9 },
+    { url: `${SITE_URL}/mot-du-jour`, lastModified: now, priority: 0.9 },
     { url: `${SITE_URL}/blog`, lastModified: now, priority: 0.7 },
     { url: `${SITE_URL}/learn`, lastModified: now, priority: 0.8 },
   ];

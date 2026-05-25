@@ -6,8 +6,51 @@
  * so toggles are instant and don't trigger React re-renders.
  */
 
-/* Default = Café */
+/* Default = Studio (aatechax-inspired: clean white, gray-950, emerald accent) */
 :root,
+html[data-skin="aatech"] {
+  --bg: #ffffff;
+  --bg-grain: rgba(15, 23, 42, 0.012);
+  --surface: #ffffff;
+  --surface-2: #f8fafc;
+  --ink: #0f172a;          /* slate-900 */
+  --ink-soft: #475569;     /* slate-600 */
+  --ink-faint: #94a3b8;    /* slate-400 */
+  --accent: #059669;       /* emerald-600 */
+  --accent-2: #10b981;     /* emerald-500 */
+  --accent-ink: #ffffff;
+  --border: rgba(15, 23, 42, 0.08);
+  --border-strong: rgba(15, 23, 42, 0.18);
+
+  --radius-card: 14px;
+  --radius-pill: 999px;
+
+  /* Subtle modern shadows (less 3D than tactile skins, closer to aatechax). */
+  --shadow-card:
+    0 0 0 1px rgba(15, 23, 42, 0.04),
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 8px 24px -8px rgba(15, 23, 42, 0.08);
+  --shadow-card-hover:
+    0 0 0 1px rgba(15, 23, 42, 0.06),
+    0 2px 4px rgba(15, 23, 42, 0.06),
+    0 16px 36px -10px rgba(15, 23, 42, 0.14);
+  --shadow-button:
+    0 1px 0 rgba(255, 255, 255, 0.2) inset,
+    0 1px 2px rgba(5, 150, 105, 0.18),
+    0 4px 12px -2px rgba(5, 150, 105, 0.28);
+  --shadow-button-pressed:
+    0 1px 1px rgba(5, 150, 105, 0.2);
+  --shadow-medal:
+    0 2px 0 rgba(255, 255, 255, 0.6) inset,
+    0 -6px 0 rgba(15, 23, 42, 0.08) inset,
+    0 0 0 6px var(--surface),
+    0 0 0 7px var(--border-strong),
+    0 8px 16px rgba(15, 23, 42, 0.10),
+    0 28px 60px rgba(15, 23, 42, 0.16);
+  --shadow-inset:
+    0 1px 2px rgba(15, 23, 42, 0.06) inset;
+}
+
 html[data-skin="cafe"] {
   --bg: #f4ead5;
   --bg-grain: rgba(58, 36, 24, 0.025);
@@ -216,7 +259,35 @@ body {
     0 1px 0 rgba(255, 255, 255, 0.4) inset,
     0 -1px 0 rgba(0, 0, 0, 0.06) inset,
     0 1px 2px rgba(0, 0, 0, 0.06);
-  transition: box-shadow 0.2s ease, transform 0.2s ease;
+  transition: box-shadow 0.2s ease, transform 0.2s ease, filter 0.2s ease;
+}
+
+/* UX polish — clickable affordance + accessible focus rings.
+ * Honors the "Tactile Digital" + "Pre-delivery checklist" guidance:
+ * cursor-pointer on clickables, visible keyboard focus, contrast aware. */
+button:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+label.tactile-chip,
+a.tactile-card,
+a.tactile-chip {
+  cursor: pointer;
+}
+button:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+:where(button, a, input, textarea, select, [role="button"], [tabindex]):focus {
+  outline: none;
+}
+:where(button, a, input, textarea, select, [role="button"], [tabindex]):focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+.tactile-chip:focus-visible,
+.tactile-button:focus-visible {
+  outline-offset: 4px;
 }
 
 .ink-strong { color: var(--ink); }

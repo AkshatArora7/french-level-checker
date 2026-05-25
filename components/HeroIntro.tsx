@@ -1,6 +1,6 @@
-"use client";
+﻿"use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import { motion, useReducedMotion } from "motion/react";
 
 export default function HeroIntro({
   title,

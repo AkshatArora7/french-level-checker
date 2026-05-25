@@ -1,6 +1,6 @@
-"use client";
+﻿"use client";
 
-import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from "framer-motion";
+import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from "motion/react";
 import { useEffect } from "react";
 
 const LEVEL_GRADIENTS: Record<string, [string, string]> = {
@@ -114,7 +114,7 @@ export default function CefrMedal({
         transition={{ delay: 0.5, type: "spring", stiffness: 200, damping: 18 }}
         className="mt-5 text-sm ink-soft"
       >
-        Niveau · {confidence}% de confiance
+        Niveau Â· {confidence}% de confiance
       </motion.div>
     </div>
   );

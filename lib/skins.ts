@@ -1,4 +1,4 @@
-export type SkinId = "cafe" | "atelier" | "metro";
+export type SkinId = "aatech" | "cafe" | "atelier" | "metro";
 
 export type Skin = {
   id: SkinId;
@@ -8,12 +8,13 @@ export type Skin = {
 };
 
 export const SKINS: Skin[] = [
+  { id: "aatech", label: "Studio", hint: "Modern emerald", swatch: "#10b981" },
   { id: "cafe", label: "Café", hint: "Parisian notebook", swatch: "#c75d3a" },
   { id: "atelier", label: "Atelier", hint: "Leather dictionary", swatch: "#c9a961" },
   { id: "metro", label: "Métro", hint: "Paris signage", swatch: "#c4302b" },
 ];
 
-export const DEFAULT_SKIN: SkinId = "cafe";
+export const DEFAULT_SKIN: SkinId = "aatech";
 
 export function nextSkin(current: SkinId): SkinId {
   const i = SKINS.findIndex((s) => s.id === current);
@@ -21,5 +22,5 @@ export function nextSkin(current: SkinId): SkinId {
 }
 
 export function isSkinId(v: unknown): v is SkinId {
-  return v === "cafe" || v === "atelier" || v === "metro";
+  return v === "aatech" || v === "cafe" || v === "atelier" || v === "metro";
 }

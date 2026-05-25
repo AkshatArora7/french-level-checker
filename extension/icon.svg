@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Source SVG for the French Level Checker extension icon.
+  Rendered by scripts/build-extension.js into 16/48/128 PNGs.
+  Design: rounded emerald tile + bold "FL" wordmark + small accent dot
+  to match the site's aatechax-inspired identity.
+-->
+<svg xmlns="http://www.w3.org/2000/svg" width="128" height="128" viewBox="0 0 128 128">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#10b981"/>
+      <stop offset="1" stop-color="#059669"/>
+    </linearGradient>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+      <feOffset dx="0" dy="2" result="offsetblur"/>
+      <feFlood flood-color="#000" flood-opacity="0.18"/>
+      <feComposite in2="offsetblur" operator="in"/>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect x="4" y="4" width="120" height="120" rx="26" fill="url(#bg)"/>
+
+  <!-- Inner highlight for depth -->
+  <rect x="4" y="4" width="120" height="60" rx="26" fill="#ffffff" opacity="0.08"/>
+
+  <!-- "FL" wordmark (Poppins-like sans, bold) -->
+  <g filter="url(#soft)">
+    <text x="64" y="84"
+          font-family="ui-sans-serif, system-ui, -apple-system, 'Segoe UI', 'Helvetica Neue', Arial, sans-serif"
+          font-weight="800"
+          font-size="62"
+          fill="#ffffff"
+          text-anchor="middle"
+          letter-spacing="-2">FL</text>
+  </g>
+
+  <!-- Signature accent dot, bottom-right -->
+  <circle cx="98" cy="96" r="6" fill="#ffffff"/>
+  <circle cx="98" cy="96" r="3" fill="#10b981"/>
+</svg>
