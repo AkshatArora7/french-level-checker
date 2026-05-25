@@ -28,15 +28,15 @@ const poppins = Poppins({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: `${SITE_NAME} — Free CEFR Level Checker for French Text`,
+    default: `${SITE_NAME} — Free CEFR Checker for French`,
     template: `%s`,
   },
   description:
-    "Paste any French text. Get its CEFR level (A1-C2), see what makes it difficult, and get a simpler version. Free, no signup.",
+    "Paste any French text and get its CEFR level (A1-C2), the words and grammar that make it hard, and a simpler version you can actually read. Free, no signup, instant.",
   openGraph: {
-    title: `${SITE_NAME} — Free CEFR Level Checker for French Text`,
+    title: `${SITE_NAME} — Free CEFR Checker for French`,
     description:
-      "Paste any French text. Get its CEFR level (A1-C2), see what makes it difficult, and get a simpler version.",
+      "Paste any French text and get its CEFR level (A1-C2), the words and grammar that make it hard, and a simpler version you can actually read. Free, no signup.",
     type: "website",
     url: SITE_URL,
     siteName: SITE_NAME,
@@ -45,7 +45,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: SITE_NAME,
     description:
-      "Paste any French text. Get its CEFR level (A1-C2), see what makes it difficult, and get a simpler version.",
+      "Paste any French text and get its CEFR level (A1-C2), the words and grammar that make it hard, and a simpler version you can actually read. Free, no signup.",
   },
   alternates: {
     canonical: SITE_URL,

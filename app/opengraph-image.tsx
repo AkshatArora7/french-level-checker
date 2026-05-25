@@ -1,6 +1,5 @@
 import { ImageResponse } from "next/og";
 
-export const runtime = "edge";
 export const alt = "French Level Checker — Free CEFR Level Checker for French Text";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
@@ -49,7 +48,7 @@ export default async function OG() {
           </div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: 18 }}>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           <div
             style={{
               fontSize: 76,
@@ -57,14 +56,33 @@ export default async function OG() {
               color: "#0f172a",
               lineHeight: 1.05,
               letterSpacing: -2,
+              display: "flex",
             }}
           >
             Free CEFR level checker
-            <br />
+          </div>
+          <div
+            style={{
+              fontSize: 76,
+              fontWeight: 800,
+              color: "#0f172a",
+              lineHeight: 1.05,
+              letterSpacing: -2,
+              display: "flex",
+            }}
+          >
             for any French text.
           </div>
-          <div style={{ fontSize: 30, color: "#334155", lineHeight: 1.3 }}>
-            Paste text → get A1-C2 level, hard words highlighted, and a simpler version.
+          <div
+            style={{
+              fontSize: 30,
+              color: "#334155",
+              lineHeight: 1.3,
+              marginTop: 10,
+              display: "flex",
+            }}
+          >
+            Paste text, get A1-C2 level, hard words, and a simpler version.
           </div>
         </div>
 
