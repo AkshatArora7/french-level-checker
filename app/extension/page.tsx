@@ -179,23 +179,37 @@ export default function ExtensionPage() {
             className="font-semibold mb-2 text-sm"
             style={{ color: "var(--ink)" }}
           >
-            How to use it
+            Five ways to use it
           </h3>
           <ul
             className="text-sm space-y-1.5"
             style={{ color: "var(--ink-soft)" }}
           >
             <li>
-              <span style={{ color: "var(--accent)" }}>•</span> Select any
-              French text on a webpage.
+              <span style={{ color: "var(--accent)" }}>•</span>{" "}
+              <strong>Keyboard shortcut</strong> — select text and press{" "}
+              <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd>. With nothing
+              selected, it analyzes the article on the page.
             </li>
             <li>
-              <span style={{ color: "var(--accent)" }}>•</span> Right-click and
-              choose <em>Check French level</em>, or click the toolbar icon.
+              <span style={{ color: "var(--accent)" }}>•</span>{" "}
+              <strong>Right-click</strong> a selection — or anywhere on the page
+              for the whole-article check.
             </li>
             <li>
-              <span style={{ color: "var(--accent)" }}>•</span> See the CEFR
-              level, difficult words, and a simpler version in a popup.
+              <span style={{ color: "var(--accent)" }}>•</span>{" "}
+              <strong>Popup ↧ Selection / ⎙ Whole page</strong> — one-click
+              buttons that read the active tab without copy-pasting.
+            </li>
+            <li>
+              <span style={{ color: "var(--accent)" }}>•</span>{" "}
+              <strong>Save words</strong> with one click, listen to fr-FR
+              pronunciation, then export your study list as CSV.
+            </li>
+            <li>
+              <span style={{ color: "var(--accent)" }}>•</span> Set your{" "}
+              <strong>target CEFR level</strong> — the extension only flags words{" "}
+              <em>above</em> what you already know.
             </li>
           </ul>
         </section>

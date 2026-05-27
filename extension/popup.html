@@ -11,34 +11,104 @@
       <a id="open-site" href="#" target="_blank" rel="noopener">Open site →</a>
     </header>
 
-    <main>
-      <textarea
-        id="text"
-        placeholder="Collez votre texte français ici… or right-click a selection on any page."
-        maxlength="3000"
-        rows="6"
-      ></textarea>
-      <div class="row">
-        <span id="count" class="count">0 / 3000</span>
-        <button id="go" class="primary">Révéler le niveau →</button>
-      </div>
+    <nav class="tabs" role="tablist">
+      <button class="tab active" data-tab="analyze" role="tab">Analyze</button>
+      <button class="tab" data-tab="history" role="tab">History</button>
+      <button class="tab" data-tab="saved" role="tab">Saved</button>
+      <button class="tab" data-tab="settings" role="tab">Settings</button>
+    </nav>
 
-      <div id="status" class="hidden"></div>
-      <div id="result" class="hidden"></div>
+    <main>
+      <!-- ANALYZE TAB -->
+      <section class="panel" data-panel="analyze">
+        <div class="quick-row">
+          <button id="grab-selection" class="ghost" title="Read current selection from the active tab">
+            ↧ Selection
+          </button>
+          <button id="grab-page" class="ghost" title="Read main article text from the active tab">
+            ⎙ Whole page
+          </button>
+          <button id="speak-input" class="ghost icon-only" title="Speak the text (fr-FR)">🔊</button>
+        </div>
+
+        <textarea
+          id="text"
+          placeholder="Collez votre texte français ici… or use Alt+Shift+F on any page."
+          maxlength="3000"
+          rows="6"
+        ></textarea>
+        <div class="row">
+          <span id="count" class="count">0 / 3000</span>
+          <div class="row-actions">
+            <button id="clear-text" class="ghost small" title="Clear">Clear</button>
+            <button id="go" class="primary">Révéler le niveau →</button>
+          </div>
+        </div>
+
+        <div id="status" class="hidden"></div>
+        <div id="result" class="hidden"></div>
+      </section>
+
+      <!-- HISTORY TAB -->
+      <section class="panel hidden" data-panel="history">
+        <div class="panel-head">
+          <h2>Recent analyses</h2>
+          <button id="clear-history" class="ghost small">Clear all</button>
+        </div>
+        <ul id="history-list" class="list"></ul>
+        <p id="history-empty" class="empty hidden">Nothing yet — analyze some French!</p>
+      </section>
+
+      <!-- SAVED WORDS TAB -->
+      <section class="panel hidden" data-panel="saved">
+        <div class="panel-head">
+          <h2>Saved words</h2>
+          <div class="row-actions">
+            <button id="export-csv" class="ghost small" title="Export Anki-friendly CSV">Export CSV</button>
+            <button id="clear-saved" class="ghost small">Clear</button>
+          </div>
+        </div>
+        <ul id="saved-list" class="list"></ul>
+        <p id="saved-empty" class="empty hidden">Save difficult words from any analysis to build your study list.</p>
+      </section>
+
+      <!-- SETTINGS TAB -->
+      <section class="panel hidden" data-panel="settings">
+        <label class="field">
+          <span class="field-label">My target level</span>
+          <select id="target-level">
+            <option value="A1">A1 — beginner</option>
+            <option value="A2">A2 — elementary</option>
+            <option value="B1">B1 — intermediate</option>
+            <option value="B2">B2 — upper-intermediate</option>
+            <option value="C1">C1 — advanced</option>
+            <option value="C2">C2 — mastery</option>
+          </select>
+          <span class="hint">We flag difficult words above this level.</span>
+        </label>
+
+        <label class="field">
+          <span class="field-label">API URL</span>
+          <input id="api-url" type="url" />
+          <span class="hint">Defaults to french.aatechax.com — change only to point at a preview deploy.</span>
+        </label>
+
+        <div class="row-actions">
+          <button id="save-settings" class="primary small">Save</button>
+          <span id="saved-msg" class="saved hidden">Saved!</span>
+        </div>
+
+        <div class="shortcut-card">
+          <p class="shortcut-title">Keyboard shortcut</p>
+          <p class="shortcut-body">
+            Press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> on any page to analyze the selected text — or the whole page if nothing is selected.
+            Change it at <a href="#" id="open-shortcuts">chrome://extensions/shortcuts</a>.
+          </p>
+        </div>
+      </section>
     </main>
 
-    <footer>
-      <details>
-        <summary>Settings</summary>
-        <label>
-          API URL
-          <input id="api-url" type="url" />
-        </label>
-        <button id="save-settings">Save</button>
-        <span id="saved" class="saved hidden">Saved!</span>
-      </details>
-    </footer>
-
+    <script src="common.js"></script>
     <script src="popup.js"></script>
   </body>
 </html>

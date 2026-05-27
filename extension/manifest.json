@@ -2,8 +2,8 @@
   "manifest_version": 3,
   "name": "French Level Checker — CEFR for any text",
   "short_name": "French Level Checker",
-  "version": "1.0.0",
-  "description": "Highlight French text on any webpage to instantly see its CEFR level (A1–C2), difficult words, and a simpler version.",
+  "version": "1.1.0",
+  "description": "Highlight French text on any webpage to instantly see its CEFR level (A1–C2), difficult words with audio, and a simpler version. Save words for later.",
   "homepage_url": "https://french.aatechax.com",
   "icons": {
     "16": "icons/icon-16.png",
@@ -12,7 +12,7 @@
     "128": "icons/icon-128.png"
   },
   "action": {
-    "default_title": "French Level Checker",
+    "default_title": "French Level Checker (Alt+Shift+F to analyze selection)",
     "default_popup": "popup.html",
     "default_icon": {
       "16": "icons/icon-16.png",
@@ -23,6 +23,15 @@
   },
   "background": {
     "service_worker": "background.js"
+  },
+  "commands": {
+    "analyze-selection": {
+      "suggested_key": {
+        "default": "Alt+Shift+F",
+        "mac": "Alt+Shift+F"
+      },
+      "description": "Analyze the currently selected French text"
+    }
   },
   "permissions": ["contextMenus", "storage", "activeTab", "scripting"],
   "host_permissions": [
