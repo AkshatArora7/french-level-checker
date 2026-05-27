@@ -4,6 +4,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import NewsletterSignup from "@/components/NewsletterSignup";
+import AdSlot from "@/components/AdSlot";
 import { SITE_URL } from "@/lib/site";
 import { articleSchema, breadcrumbList, jsonLdString } from "@/lib/jsonld";
 
@@ -146,6 +147,7 @@ export default async function BlogPost(
         <h1 className="text-4xl font-bold mt-4 mb-2">{post.title}</h1>
         <p className="text-sm text-gray-500 mb-6">{post.date}</p>
         <div className="prose-like">{renderMarkdown(post.body)}</div>
+        <AdSlot slot="blog-end" />
         <div className="mt-12 p-6 border rounded-lg bg-blue-50">
           <p className="font-semibold mb-1">Check any French text&apos;s level</p>
           <p className="text-sm text-gray-700 mb-3">

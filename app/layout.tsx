@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono, Poppins } from "next/font/google";
 import { Analytics } from "@vercel/analytics/react";
+import Script from "next/script";
 import Link from "next/link";
 import "./globals.css";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
@@ -8,6 +9,8 @@ import { SkinProvider } from "@/components/SkinProvider";
 import { SoundProvider } from "@/components/SoundProvider";
 import { VocabProvider } from "@/components/VocabProvider";
 import SiteNav from "@/components/SiteNav";
+
+const ADSENSE_CLIENT = process.env.NEXT_PUBLIC_ADSENSE_CLIENT || "";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -78,8 +81,20 @@ export default function RootLayout({
     >
       <head>
         <script dangerouslySetInnerHTML={{ __html: skinBootstrap }} />
+        {ADSENSE_CLIENT && (
+          <meta name="google-adsense-account" content={ADSENSE_CLIENT} />
+        )}
       </head>
       <body className="min-h-full flex flex-col">
+        {ADSENSE_CLIENT && (
+          <Script
+            id="adsense-loader"
+            async
+            strategy="afterInteractive"
+            crossOrigin="anonymous"
+            src={`https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${ADSENSE_CLIENT}`}
+          />
+        )}
         <SkinProvider>
           <SoundProvider>
             <VocabProvider>

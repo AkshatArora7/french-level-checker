@@ -179,13 +179,13 @@ export default function Home() {
 
         <section className="mt-12">
           <div className="tactile-card p-6">
-            <p className="text-xs uppercase tracking-widest ink-faint">Recommended</p>
+            <p className="text-xs uppercase tracking-widest ink-faint">Free</p>
             <h2 className="text-2xl font-semibold mt-1 ink-strong">
-              Apps, tutors & books we actually recommend
+              Apps, tutors & books worth your time
             </h2>
             <p className="ink-soft mt-2 text-sm">
-              Curated list of resources to take you from A1 to C1 — free options
-              and paid ones, with honest pros and cons.
+              A curated list of resources to take you from A1 to C1 — free
+              options first, paid ones second. No affiliate links, no kickbacks.
             </p>
             <Link
               href="/resources"

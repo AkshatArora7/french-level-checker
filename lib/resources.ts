@@ -1,7 +1,6 @@
 /**
- * Curated resources for French learners. Each entry can be flagged as an
- * affiliate slot. Links currently point at the canonical homepage of each
- * partner — swap in tagged affiliate URLs once partner programs are live.
+ * Curated resources for French learners. This is a plain editorial list — no
+ * affiliate links, no commissions. Update freely as the recommendations evolve.
  *
  * Categories are stable; the order within a category is the rendered order.
  */
@@ -12,7 +11,6 @@ export type Resource = {
   url: string;
   best_for: string;
   price: string;
-  affiliate?: boolean;
 };
 
 export type ResourceCategory = {
@@ -36,7 +34,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         url: "https://www.italki.com/teachers/french",
         best_for: "Conversation practice at any level",
         price: "$8–25 / hour",
-        affiliate: true,
+
       },
       {
         name: "Preply",
@@ -45,7 +43,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         url: "https://preply.com/en/online/french-tutors",
         best_for: "Structured weekly sessions",
         price: "$10–30 / hour",
-        affiliate: true,
+
       },
     ],
   },
@@ -62,7 +60,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         url: "https://www.babbel.com/learn-french",
         best_for: "Beginner → low B1",
         price: "$7–14 / month",
-        affiliate: true,
+
       },
       {
         name: "Kwiziq",
@@ -71,7 +69,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         url: "https://french.kwiziq.com/",
         best_for: "B1 → C1 grammar gap-filling",
         price: "Free tier + $14/mo Premium",
-        affiliate: true,
+
       },
       {
         name: "LingQ",
@@ -80,7 +78,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         url: "https://www.lingq.com/en/learn-french-online/",
         best_for: "Extensive reading at A2+",
         price: "Free tier + $13/mo Premium",
-        affiliate: true,
+
       },
       {
         name: "Duolingo",
@@ -105,7 +103,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         url: "https://www.amazon.com/dp/2090381183",
         best_for: "A2 → B1 grammar foundation",
         price: "~$25",
-        affiliate: true,
+
       },
       {
         name: "Le Petit Nicolas — Sempé / Goscinny",
@@ -114,7 +112,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         url: "https://www.amazon.com/dp/2070612775",
         best_for: "First novel at B1",
         price: "~$10",
-        affiliate: true,
+
       },
       {
         name: "L'étranger — Albert Camus",
@@ -123,7 +121,7 @@ export const RESOURCE_CATEGORIES: ResourceCategory[] = [
         url: "https://www.amazon.com/dp/2070360024",
         best_for: "First real novel at B2",
         price: "~$10",
-        affiliate: true,
+
       },
     ],
   },

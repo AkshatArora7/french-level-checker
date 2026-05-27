@@ -5,6 +5,7 @@ import HeroIntro from "@/components/HeroIntro";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import RelatedLinks from "@/components/RelatedLinks";
 import NewsletterSignup from "@/components/NewsletterSignup";
+import AdSlot from "@/components/AdSlot";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
@@ -93,6 +94,8 @@ export default async function SeoPage(
         {related.length ? (
           <RelatedLinks title="More tools like this" items={related} />
         ) : null}
+
+        <AdSlot slot="seo-landing-end" />
 
         <NewsletterSignup />
 

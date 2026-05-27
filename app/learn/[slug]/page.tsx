@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { LEARN_LEVELS, getLearnLevel } from "@/lib/learn-levels";
 import HeroIntro from "@/components/HeroIntro";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import AdSlot from "@/components/AdSlot";
 import { SITE_URL } from "@/lib/site";
 import { breadcrumbList, courseSchema, jsonLdString } from "@/lib/jsonld";
 
@@ -201,6 +202,8 @@ export default async function LearnLevelPage(
             <p className="ink-soft text-sm mt-1">{nextLvl.tagline}</p>
           </Link>
         )}
+
+        <AdSlot slot="learn-mid" />
 
         <section className="tactile-card p-6 mb-6">
           <h2 className="ink-strong font-semibold mb-2">
