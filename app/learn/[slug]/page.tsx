@@ -3,6 +3,9 @@ import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { LEARN_LEVELS, getLearnLevel } from "@/lib/learn-levels";
 import HeroIntro from "@/components/HeroIntro";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import { SITE_URL } from "@/lib/site";
+import { breadcrumbList, courseSchema, jsonLdString } from "@/lib/jsonld";
 
 export const dynamicParams = false;
 
@@ -16,10 +19,12 @@ export async function generateMetadata(
   const { slug } = await params;
   const lvl = getLearnLevel(slug);
   if (!lvl) return {};
+  const url = `${SITE_URL}/learn/${slug}`;
   return {
     title: lvl.metaTitle,
     description: lvl.metaDescription,
-    openGraph: { title: lvl.metaTitle, description: lvl.metaDescription, type: "article" },
+    alternates: { canonical: url },
+    openGraph: { title: lvl.metaTitle, description: lvl.metaDescription, type: "article", url },
   };
 }
 
@@ -43,12 +48,34 @@ export default async function LearnLevelPage(
     ? LEARN_LEVELS.find((l) => l.level === lvl.nextLevel)
     : null;
 
+  const url = `${SITE_URL}/learn/${slug}`;
+  const ld = [
+    breadcrumbList([
+      { name: "Home", url: "/" },
+      { name: "Learn", url: "/learn" },
+      { name: lvl.title, url: `/learn/${slug}` },
+    ]),
+    courseSchema({
+      name: lvl.title,
+      description: lvl.metaDescription,
+      url,
+    }),
+  ];
+
   return (
     <main className="min-h-screen p-6 sm:p-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdString(ld) }}
+      />
       <div className="max-w-3xl mx-auto">
-        <Link href="/learn" className="text-sm hover:underline">
-          ← All levels
-        </Link>
+        <Breadcrumbs
+          items={[
+            { name: "Home", href: "/" },
+            { name: "Learn", href: "/learn" },
+            { name: lvl.level },
+          ]}
+        />
 
         <div className="mt-6 mb-2 flex items-baseline gap-4">
           <span

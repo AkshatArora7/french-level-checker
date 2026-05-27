@@ -23,10 +23,12 @@ type NavItem = { href: string; label: string };
 
 const NAV_ITEMS: NavItem[] = [
   { href: "/", label: "Analyser" },
+  { href: "/tools", label: "Outils" },
   { href: "/jeu", label: "Wordle" },
   { href: "/mot-du-jour", label: "Mot du jour" },
   { href: "/vocab", label: "Carnet" },
   { href: "/learn", label: "Apprendre" },
+  { href: "/resources", label: "Ressources" },
   { href: "/blog", label: "Blog" },
 ];
 

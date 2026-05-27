@@ -2,6 +2,10 @@ import { BLOG_POSTS, getPost } from "@/lib/blog";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
+import Breadcrumbs from "@/components/Breadcrumbs";
+import NewsletterSignup from "@/components/NewsletterSignup";
+import { SITE_URL } from "@/lib/site";
+import { articleSchema, breadcrumbList, jsonLdString } from "@/lib/jsonld";
 
 export const dynamicParams = false;
 
@@ -15,10 +19,19 @@ export async function generateMetadata(
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) return {};
+  const url = `${SITE_URL}/blog/${slug}`;
   return {
     title: `${post.title} — French Level Checker`,
     description: post.description,
-    openGraph: { title: post.title, description: post.description, type: "article" },
+    alternates: { canonical: url },
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      type: "article",
+      url,
+      publishedTime: post.date,
+    },
+    twitter: { card: "summary_large_image", title: post.title, description: post.description },
   };
 }
 
@@ -99,12 +112,37 @@ export default async function BlogPost(
   const post = getPost(slug);
   if (!post) notFound();
 
+  const url = `${SITE_URL}/blog/${slug}`;
+  const ld = [
+    breadcrumbList([
+      { name: "Home", url: "/" },
+      { name: "Blog", url: "/blog" },
+      { name: post.title, url: `/blog/${slug}` },
+    ]),
+    articleSchema({
+      headline: post.title,
+      description: post.description,
+      url,
+      datePublished: post.date,
+    }),
+  ];
+
+  const related = BLOG_POSTS.filter((p) => p.slug !== slug).slice(0, 3);
+
   return (
     <main className="min-h-screen p-8">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdString(ld) }}
+      />
       <article className="max-w-2xl mx-auto">
-        <Link href="/blog" className="text-sm text-blue-600 hover:underline">
-          ← Blog
-        </Link>
+        <Breadcrumbs
+          items={[
+            { name: "Home", href: "/" },
+            { name: "Blog", href: "/blog" },
+            { name: post.title },
+          ]}
+        />
         <h1 className="text-4xl font-bold mt-4 mb-2">{post.title}</h1>
         <p className="text-sm text-gray-500 mb-6">{post.date}</p>
         <div className="prose-like">{renderMarkdown(post.body)}</div>
@@ -120,6 +158,28 @@ export default async function BlogPost(
             Try the tool →
           </Link>
         </div>
+        <div className="mt-8">
+          <NewsletterSignup />
+        </div>
+        {related.length > 0 && (
+          <section className="mt-10">
+            <h2 className="text-xs uppercase tracking-wider ink-faint mb-3">
+              Keep reading
+            </h2>
+            <ul className="space-y-3">
+              {related.map((r) => (
+                <li key={r.slug}>
+                  <Link href={`/blog/${r.slug}`} className="block group">
+                    <span className="font-semibold ink-strong group-hover:underline">
+                      {r.title}
+                    </span>
+                    <span className="ink-soft text-sm block">{r.description}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
       </article>
     </main>
   );

@@ -49,10 +49,8 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: SITE_URL,
-    languages: {
-      "en": SITE_URL,
-      "fr": SITE_URL,
-      "x-default": SITE_URL,
+    types: {
+      "application/rss+xml": `${SITE_URL}/blog/feed.xml`,
     },
   },
   verification: {

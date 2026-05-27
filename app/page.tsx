@@ -2,9 +2,11 @@ import { Suspense } from "react";
 import TextAnalyzer from "@/components/TextAnalyzer";
 import HeroIntro from "@/components/HeroIntro";
 import DailyWordCard from "@/components/DailyWordCard";
+import NewsletterSignup from "@/components/NewsletterSignup";
 import Link from "next/link";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
 import { dailyWord } from "@/lib/daily";
+import { faqPageSchema, softwareAppSchema, jsonLdString } from "@/lib/jsonld";
 
 // Revalidate hourly so the embedded "Mot du jour" rolls over after UTC midnight.
 export const revalidate = 3600;
@@ -28,27 +30,9 @@ const faqs = [
   },
 ];
 
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  name: SITE_NAME,
-  url: SITE_URL,
-  applicationCategory: "EducationalApplication",
-  operatingSystem: "Any",
-  offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
-  description:
-    "Free tool that analyzes French text and returns its CEFR level (A1-C2), highlights difficult vocabulary and grammar, and produces a simpler version.",
-};
+const jsonLd = softwareAppSchema();
 
-const faqLd = {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  mainEntity: faqs.map((f) => ({
-    "@type": "Question",
-    name: f.q,
-    acceptedAnswer: { "@type": "Answer", text: f.a },
-  })),
-};
+const faqLd = faqPageSchema(faqs.map((f) => ({ q: f.q, a: f.a })));
 
 export default function Home() {
   const today = new Date();
@@ -62,11 +46,7 @@ export default function Home() {
     <main className="min-h-screen p-8">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+        dangerouslySetInnerHTML={{ __html: jsonLdString([jsonLd, faqLd]) }}
       />
       <div className="max-w-3xl mx-auto">
         {/* Install extension banner — top of page, dismissible-feel but persistent */}
@@ -184,7 +164,41 @@ export default function Home() {
             <li><Link href="/is-this-french-b1" className="hover:underline">Is this French B1?</Link></li>
             <li><Link href="/is-this-french-b2" className="hover:underline">Is this French B2?</Link></li>
             <li><Link href="/french-text-analyzer" className="hover:underline">French text analyzer</Link></li>
+            <li><Link href="/french-sentence-simplifier" className="hover:underline">French sentence simplifier</Link></li>
+            <li><Link href="/french-vocabulary-extractor" className="hover:underline">French vocabulary extractor</Link></li>
+            <li><Link href="/delf-b1-sample-text" className="hover:underline">DELF B1 sample text checker</Link></li>
+            <li><Link href="/delf-b2-sample-text" className="hover:underline">DELF B2 sample text checker</Link></li>
+            <li><Link href="/dalf-c1-sample-text" className="hover:underline">DALF C1 sample text checker</Link></li>
+            <li><Link href="/check-french-homework-level" className="hover:underline">Check French homework level</Link></li>
           </ul>
+          <p className="ink-soft text-sm mt-3">
+            See <Link href="/tools" className="underline">all tools</Link> or browse the{" "}
+            <Link href="/glossary" className="underline">CEFR glossary</Link>.
+          </p>
+        </section>
+
+        <section className="mt-12">
+          <div className="tactile-card p-6">
+            <p className="text-xs uppercase tracking-widest ink-faint">Recommended</p>
+            <h2 className="text-2xl font-semibold mt-1 ink-strong">
+              Apps, tutors & books we actually recommend
+            </h2>
+            <p className="ink-soft mt-2 text-sm">
+              Curated list of resources to take you from A1 to C1 — free options
+              and paid ones, with honest pros and cons.
+            </p>
+            <Link
+              href="/resources"
+              className="tactile-button inline-block px-5 py-2 text-sm mt-4 no-underline"
+              style={{ color: "var(--accent-ink)" }}
+            >
+              See the list →
+            </Link>
+          </div>
+        </section>
+
+        <section className="mt-12">
+          <NewsletterSignup />
         </section>
 
         <section className="mt-12">
