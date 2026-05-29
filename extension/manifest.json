@@ -3,7 +3,7 @@
   "name": "French Level Checker — CEFR for any text",
   "short_name": "French Level Checker",
   "version": "1.1.0",
-  "description": "Highlight French text on any webpage to instantly see its CEFR level (A1–C2), difficult words with audio, and a simpler version. Save words for later.",
+  "description": "Highlight French text on any webpage to see its CEFR level (A1–C2), difficult words with audio, and a simpler version.",
   "homepage_url": "https://french.aatechax.com",
   "icons": {
     "16": "icons/icon-16.png",
