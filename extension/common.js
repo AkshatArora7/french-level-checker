@@ -4,15 +4,17 @@
 const FLC_DEFAULTS = {
   apiUrl: "https://french.aatechax.com/api/analyze",
   targetLevel: "B1",
+  bubbleEnabled: false,
+  badgeEnabled: true,
 };
 
 const FLC_LEVEL_COLORS = {
-  A1: ["#a8e6a3", "#3f9d4a"],
-  A2: ["#7fd8b8", "#1f8a6b"],
-  B1: ["#8ec6ff", "#2b6cb0"],
-  B2: ["#a99dff", "#4338ca"],
-  C1: ["#d7a8ff", "#7c3aed"],
-  C2: ["#ffb3c1", "#c4302b"],
+  A1: ["#86efac", "#16a34a"],
+  A2: ["#6ee7b7", "#059669"],
+  B1: ["#7dd3fc", "#0284c7"],
+  B2: ["#c4b5fd", "#6d28d9"],
+  C1: ["#f0abfc", "#a21caf"],
+  C2: ["#fda4af", "#be123c"],
 };
 
 const FLC_LEVEL_RANK = { A1: 1, A2: 2, B1: 3, B2: 4, C1: 5, C2: 6 };
@@ -103,4 +105,8 @@ function flcAboveTarget(wordLevel, targetLevel) {
 function flcFilterWordsByTarget(words, targetLevel) {
   if (!Array.isArray(words)) return [];
   return words.filter((w) => flcAboveTarget(w.level, targetLevel));
+}
+
+function flcWiktionaryUrl(word) {
+  return `https://en.wiktionary.org/wiki/${encodeURIComponent((word || "").toLowerCase().trim())}#French`;
 }

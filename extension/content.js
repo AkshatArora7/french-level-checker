@@ -3,12 +3,12 @@
   window.__flcInjected = true;
 
   const LEVEL_COLORS = {
-    A1: ["#a8e6a3", "#3f9d4a"],
-    A2: ["#7fd8b8", "#1f8a6b"],
-    B1: ["#8ec6ff", "#2b6cb0"],
-    B2: ["#a99dff", "#4338ca"],
-    C1: ["#d7a8ff", "#7c3aed"],
-    C2: ["#ffb3c1", "#c4302b"],
+    A1: ["#86efac", "#16a34a"],
+    A2: ["#6ee7b7", "#059669"],
+    B1: ["#7dd3fc", "#0284c7"],
+    B2: ["#c4b5fd", "#6d28d9"],
+    C1: ["#f0abfc", "#a21caf"],
+    C2: ["#fda4af", "#be123c"],
   };
   const LEVEL_RANK = { A1: 1, A2: 2, B1: 3, B2: 4, C1: 5, C2: 6 };
   const SITE_URL = "https://french.aatechax.com";
@@ -91,95 +91,111 @@
       .flc-panel {
         all: initial;
         display: block;
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-        width: 380px;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+        width: 340px;
         max-height: 80vh;
         overflow: auto;
-        background: #fbf5e6;
-        color: #3a2418;
-        border-radius: 16px;
-        box-shadow:
-          0 1px 0 rgba(255, 248, 235, 0.9) inset,
-          0 -2px 0 rgba(58, 36, 24, 0.06) inset,
-          0 4px 8px rgba(58, 36, 24, 0.12),
-          0 24px 60px rgba(58, 36, 24, 0.32);
+        background: #ffffff;
+        color: #0f172a;
+        border-radius: 10px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.12), 0 2px 6px rgba(15, 23, 42, 0.06);
         padding: 14px 16px 16px;
-        animation: flc-in 0.4s cubic-bezier(0.2, 0.9, 0.2, 1.2);
+        animation: flc-in 0.18s ease-out;
       }
       @keyframes flc-in {
-        from { opacity: 0; transform: translateY(-8px) scale(0.97); }
-        to { opacity: 1; transform: translateY(0) scale(1); }
+        from { opacity: 0; transform: translateY(-4px); }
+        to { opacity: 1; transform: translateY(0); }
       }
       .flc-head {
         display: flex; justify-content: space-between; align-items: center;
         margin-bottom: 12px; cursor: grab; user-select: none;
       }
       .flc-head:active { cursor: grabbing; }
-      .flc-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: #9a8472; }
-      .flc-head-actions { display: flex; gap: 4px; align-items: center; }
-      .flc-iconbtn {
-        all: unset; cursor: pointer; font-size: 14px; color: #6b4f3f;
-        padding: 3px 7px; border-radius: 6px;
+      .flc-title {
+        font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+        color: #94a3b8; font-weight: 600;
+        display: inline-flex; align-items: center; gap: 7px;
       }
-      .flc-iconbtn:hover { background: rgba(58,36,24,0.06); color: #3a2418; }
+      .flc-title::before {
+        content: ""; width: 7px; height: 7px; border-radius: 50%;
+        background: #059669;
+      }
+      .flc-head-actions { display: flex; gap: 2px; align-items: center; }
+      .flc-iconbtn {
+        all: unset; cursor: pointer; font-size: 13px; color: #475569;
+        padding: 3px 7px; border-radius: 4px; line-height: 1;
+      }
+      .flc-iconbtn:hover { background: #f1f5f9; color: #0f172a; }
       .flc-close { font-size: 18px; line-height: 1; }
       .flc-medal {
         display: flex; align-items: center; justify-content: center;
-        width: 76px; height: 76px; margin: 0 auto 10px;
-        border-radius: 50%; color: #fff8ee;
-        font-weight: 800; font-size: 32px;
-        box-shadow:
-          0 2px 0 rgba(255, 255, 255, 0.45) inset,
-          0 -4px 0 rgba(0, 0, 0, 0.18) inset,
-          0 0 0 4px #fbf5e6,
-          0 0 0 5px rgba(58, 36, 24, 0.28),
-          0 8px 16px rgba(58, 36, 24, 0.18);
-        text-shadow: 0 2px 0 rgba(255,255,255,0.3), 0 -1px 0 rgba(0,0,0,0.2);
+        width: 56px; height: 56px; margin: 0 auto 10px;
+        border-radius: 50%; color: #fff;
+        font-weight: 700; font-size: 20px; letter-spacing: -0.02em;
       }
-      .flc-confidence { text-align: center; font-size: 11px; color: #6b4f3f; margin-bottom: 10px; }
-      .flc-summary { font-size: 13px; line-height: 1.5; margin: 0 0 10px; }
-      .flc-section-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: #9a8472; margin: 10px 0 4px; }
-      .flc-word-list { margin: 0; padding: 0; list-style: none; font-size: 13px; }
+      .flc-confidence {
+        text-align: center; font-size: 10px; color: #94a3b8;
+        margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.06em;
+      }
+      .flc-summary {
+        font-size: 13px; line-height: 1.55; margin: 0 0 12px;
+        color: #475569;
+      }
+      .flc-section-label {
+        font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em;
+        color: #94a3b8; margin: 14px 0 6px; font-weight: 600;
+      }
+      .flc-word-list { margin: 0; padding: 0; list-style: none; font-size: 12px; }
       .flc-word-list li {
-        padding: 5px 0; border-top: 1px solid rgba(58,36,24,0.08);
-        display: flex; justify-content: space-between; align-items: center; gap: 6px;
+        padding: 7px 0; border-top: 1px solid #f1f5f9;
+        display: flex; justify-content: space-between; align-items: center; gap: 8px;
       }
       .flc-word-list li:first-child { border-top: none; }
       .flc-word-left { flex: 1; min-width: 0; }
-      .flc-word-right { display: flex; gap: 4px; align-items: center; flex-shrink: 0; }
-      .flc-word { font-weight: 600; font-family: "SF Mono", Menlo, monospace; }
-      .flc-trans { color: #6b4f3f; font-size: 12px; }
+      .flc-word-right { display: flex; gap: 3px; align-items: center; flex-shrink: 0; }
+      .flc-word {
+        font-weight: 600; color: #0f172a;
+        font-family: ui-monospace, "SF Mono", Menlo, monospace;
+      }
+      .flc-trans { color: #475569; font-size: 12px; }
       .flc-lvl-pill {
-        display: inline-block; padding: 1px 6px; border-radius: 4px;
-        font-size: 10px; font-weight: 700; color: #fff;
+        display: inline-block; padding: 2px 6px; border-radius: 4px;
+        font-size: 10px; font-weight: 600; color: #fff;
       }
       .flc-simpler {
-        background: #fff; padding: 10px; border-radius: 8px;
-        font-style: italic; font-size: 13px; line-height: 1.5;
-        border: 1px solid rgba(58,36,24,0.08);
+        background: #f8fafc; padding: 10px 12px; border-radius: 6px;
+        font-size: 12px; line-height: 1.55;
+        border: 1px solid #e2e8f0; color: #475569;
       }
-      .flc-loading { text-align: center; padding: 20px 0; color: #6b4f3f; font-size: 13px; }
+      .flc-loading {
+        text-align: center; padding: 24px 0; color: #475569; font-size: 12px;
+      }
       .flc-spinner {
-        width: 32px; height: 32px; margin: 0 auto 12px; border-radius: 50%;
-        background: conic-gradient(from 0deg, #c75d3a, #e08a5f, #c75d3a);
-        animation: flc-spin 1.2s linear infinite;
+        width: 24px; height: 24px; margin: 0 auto 10px; border-radius: 50%;
+        border: 2px solid #e2e8f0; border-top-color: #059669;
+        animation: flc-spin 0.8s linear infinite;
       }
       @keyframes flc-spin { to { transform: rotate(360deg); } }
-      .flc-err { color: #c4302b; font-size: 13px; padding: 12px; background: rgba(196,48,43,0.08); border-radius: 8px; }
+      .flc-err {
+        color: #dc2626; font-size: 12px; padding: 10px 12px;
+        background: #fef2f2; border-radius: 6px; border: 1px solid #fecaca;
+      }
       .flc-footer {
         display: flex; gap: 6px; margin-top: 14px;
         justify-content: flex-end; flex-wrap: wrap;
       }
       .flc-cta {
-        all: unset; cursor: pointer; font-size: 11px; font-weight: 600;
-        padding: 5px 10px; border-radius: 999px;
-        background: #fff; border: 1px solid rgba(58,36,24,0.14); color: #3a2418;
+        all: unset; cursor: pointer; font-size: 11px; font-weight: 500;
+        padding: 5px 10px; border-radius: 6px;
+        background: #fff; border: 1px solid #e2e8f0; color: #475569;
+        transition: background 0.12s ease, color 0.12s ease;
       }
-      .flc-cta:hover { background: rgba(199,93,58,0.08); }
+      .flc-cta:hover { background: #f8fafc; color: #0f172a; }
       .flc-cta.primary {
-        background: linear-gradient(180deg, #e08a5f, #c75d3a);
-        color: #fff8ee; border: none;
+        background: #059669; color: #fff; border-color: #059669;
       }
+      .flc-cta.primary:hover { background: #10b981; border-color: #10b981; }
     `;
     shadow.appendChild(style);
 
@@ -271,7 +287,7 @@
     const medal = el("div", {
       className: "flc-medal",
       textContent: result.level,
-      style: { background: `radial-gradient(circle at 30% 25%, ${light} 0%, ${dark} 80%)` },
+      style: { background: dark },
     });
     panel.appendChild(medal);
 
@@ -318,6 +334,15 @@
             textContent: "🔊",
             title: "Speak",
             onclick: () => speak(w.word),
+          }),
+          el("button", {
+            className: "flc-iconbtn",
+            textContent: "📖",
+            title: "Wiktionary",
+            onclick: () => {
+              const u = `https://en.wiktionary.org/wiki/${encodeURIComponent((w.word || "").toLowerCase().trim())}#French`;
+              window.open(u, "_blank", "noopener");
+            },
           }),
           el("button", {
             className: "flc-iconbtn",

@@ -47,7 +47,7 @@ async function renderResult(result, sourceText) {
     el("div", {
       className: "medal",
       textContent: result.level,
-      style: { background: `radial-gradient(circle at 30% 25%, ${light} 0%, ${dark} 80%)` },
+      style: { background: dark },
     }),
   ]);
   root.appendChild(medalWrap);
@@ -128,6 +128,12 @@ function buildWordRow(w) {
       title: "Speak",
       textContent: "🔊",
       onclick: () => flcSpeak(w.word),
+    }),
+    el("button", {
+      className: "ghost icon-only tiny",
+      title: "Look up on Wiktionary",
+      textContent: "📖",
+      onclick: () => chrome.tabs.create({ url: flcWiktionaryUrl(w.word) }),
     }),
     el("button", {
       className: "ghost icon-only tiny",
@@ -254,7 +260,7 @@ async function renderHistory() {
     const badge = el("span", {
       className: "lvl big",
       textContent: h.result?.level || "?",
-      style: { background: `linear-gradient(180deg, ${light}, ${dark})` },
+      style: { background: dark },
     });
     const body = el("div", { className: "history-body" }, [
       el("p", { className: "history-text", textContent: (h.text || "").slice(0, 120) + ((h.text || "").length > 120 ? "…" : "") }),
@@ -282,9 +288,11 @@ async function renderSaved() {
   const saved = await flcGetSavedWords();
   if (!saved.length) {
     empty.classList.remove("hidden");
+    $("study-mode").disabled = true;
     return;
   }
   empty.classList.add("hidden");
+  $("study-mode").disabled = false;
   for (const w of saved) {
     const li = buildWordRow(w);
     li.querySelectorAll("button").forEach((b) => {
@@ -300,6 +308,71 @@ async function renderSaved() {
     });
     list.appendChild(li);
   }
+}
+
+// ────────────────────────────────────────────────────────────
+// Flashcard study mode
+// ────────────────────────────────────────────────────────────
+let flashDeck = [];
+let flashIndex = 0;
+let flashFlipped = false;
+
+function shuffle(arr) {
+  const a = arr.slice();
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+async function startFlashcards() {
+  const saved = await flcGetSavedWords();
+  if (!saved.length) return;
+  flashDeck = shuffle(saved);
+  flashIndex = 0;
+  $("flashcard").classList.remove("hidden");
+  $("saved-list").classList.add("hidden");
+  renderFlash();
+}
+
+function closeFlashcards() {
+  $("flashcard").classList.add("hidden");
+  $("saved-list").classList.remove("hidden");
+}
+
+function renderFlash() {
+  if (!flashDeck.length) return;
+  const card = flashDeck[flashIndex];
+  flashFlipped = false;
+  const [, d] = FLC_LEVEL_COLORS[card.level] || ["#cbd5e1", "#475569"];
+  $("flash-word").textContent = card.word || "";
+  const lvl = $("flash-lvl");
+  lvl.textContent = card.level || "?";
+  lvl.style.background = d;
+  $("flash-translation").textContent = card.translation || "(no translation saved)";
+  $("flash-back").classList.add("hidden");
+  $("flash-card").querySelector(".flash-front").classList.remove("hidden");
+  $("flash-progress").textContent = `${flashIndex + 1} / ${flashDeck.length}`;
+}
+
+function flipFlash() {
+  if (!flashDeck.length) return;
+  flashFlipped = !flashFlipped;
+  $("flash-back").classList.toggle("hidden", !flashFlipped);
+  $("flash-card").querySelector(".flash-front").classList.toggle("hidden", flashFlipped);
+}
+
+function nextFlash() {
+  if (!flashDeck.length) return;
+  flashIndex = (flashIndex + 1) % flashDeck.length;
+  renderFlash();
+}
+
+function prevFlash() {
+  if (!flashDeck.length) return;
+  flashIndex = (flashIndex - 1 + flashDeck.length) % flashDeck.length;
+  renderFlash();
 }
 
 function exportCsv() {
@@ -328,14 +401,40 @@ async function loadSettings() {
   const s = await flcGetSettings();
   $("api-url").value = s.apiUrl;
   $("target-level").value = s.targetLevel;
+  $("badge-enabled").checked = !!s.badgeEnabled;
+  // bubble-enabled reflects both the user setting AND whether the perm is granted.
+  const hasPerm = await chrome.permissions.contains({ origins: ["<all_urls>"] }).catch(() => false);
+  $("bubble-enabled").checked = !!s.bubbleEnabled && !!hasPerm;
 }
 
 async function saveSettings() {
   const apiUrl = $("api-url").value.trim() || FLC_DEFAULTS.apiUrl;
   const targetLevel = $("target-level").value || "B1";
-  await flcSetSettings({ apiUrl, targetLevel });
+  const badgeEnabled = $("badge-enabled").checked;
+  await flcSetSettings({ apiUrl, targetLevel, badgeEnabled });
+  chrome.runtime.sendMessage({ type: "flc:refresh-badge" }).catch(() => {});
   $("saved-msg").classList.remove("hidden");
   setTimeout(() => $("saved-msg").classList.add("hidden"), 1200);
+}
+
+async function toggleBubble(want) {
+  if (want) {
+    let granted = false;
+    try {
+      granted = await chrome.permissions.request({ origins: ["<all_urls>"] });
+    } catch {}
+    if (!granted) {
+      $("bubble-enabled").checked = false;
+      setStatus("Permission denied — selection bubble stays off.", true);
+      setTimeout(clearStatus, 2200);
+      return;
+    }
+    await flcSetSettings({ bubbleEnabled: true });
+  } else {
+    await flcSetSettings({ bubbleEnabled: false });
+    // Don't auto-revoke the host permission — keep it for next time the user toggles back on.
+  }
+  await chrome.runtime.sendMessage({ type: "flc:bubble-toggle" }).catch(() => {});
 }
 
 // ────────────────────────────────────────────────────────────
@@ -378,6 +477,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     e.preventDefault();
     chrome.tabs.create({ url: "chrome://extensions/shortcuts" });
   });
+  $("bubble-enabled").addEventListener("change", (e) => toggleBubble(e.target.checked));
 
   // History / Saved actions
   $("clear-history").addEventListener("click", async () => {
@@ -386,9 +486,31 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
   $("clear-saved").addEventListener("click", async () => {
     await chrome.storage.local.set({ savedWords: [] });
+    closeFlashcards();
     renderSaved();
+    chrome.runtime.sendMessage({ type: "flc:refresh-badge" }).catch(() => {});
   });
   $("export-csv").addEventListener("click", exportCsv);
+
+  // Flashcards
+  $("study-mode").addEventListener("click", startFlashcards);
+  $("flash-close").addEventListener("click", closeFlashcards);
+  $("flash-card").addEventListener("click", flipFlash);
+  $("flash-card").addEventListener("keydown", (e) => {
+    if (e.key === " " || e.key === "Enter") { e.preventDefault(); flipFlash(); }
+    else if (e.key === "ArrowRight") nextFlash();
+    else if (e.key === "ArrowLeft") prevFlash();
+  });
+  $("flash-next").addEventListener("click", nextFlash);
+  $("flash-prev").addEventListener("click", prevFlash);
+  $("flash-speak").addEventListener("click", () => {
+    const card = flashDeck[flashIndex];
+    if (card?.word) flcSpeak(card.word);
+  });
+  $("flash-wikt").addEventListener("click", () => {
+    const card = flashDeck[flashIndex];
+    if (card?.word) chrome.tabs.create({ url: flcWiktionaryUrl(card.word) });
+  });
 
   // Restore last analysis within the same session if popup is reopened.
   const cached = await chrome.storage.session?.get?.(["lastText", "lastResult"]);

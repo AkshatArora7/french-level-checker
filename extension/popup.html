@@ -64,10 +64,36 @@
         <div class="panel-head">
           <h2>Saved words</h2>
           <div class="row-actions">
+            <button id="study-mode" class="primary small" title="Flashcard practice">🎓 Study</button>
             <button id="export-csv" class="ghost small" title="Export Anki-friendly CSV">Export CSV</button>
             <button id="clear-saved" class="ghost small">Clear</button>
           </div>
         </div>
+
+        <!-- Flashcard mode -->
+        <div id="flashcard" class="flashcard hidden">
+          <div class="flash-meta">
+            <span id="flash-progress">0 / 0</span>
+            <button id="flash-close" class="ghost tiny" title="Close">✕</button>
+          </div>
+          <div id="flash-card" class="flash-card" tabindex="0">
+            <div class="flash-front">
+              <p id="flash-word" class="flash-word"></p>
+              <span id="flash-lvl" class="lvl big"></span>
+              <p class="flash-hint">Click card or press <kbd>Space</kbd> to flip</p>
+            </div>
+            <div id="flash-back" class="flash-back hidden">
+              <p id="flash-translation" class="flash-translation"></p>
+            </div>
+          </div>
+          <div class="flash-actions">
+            <button id="flash-speak" class="ghost small">🔊 Speak</button>
+            <button id="flash-wikt" class="ghost small">📖 Wiktionary</button>
+            <button id="flash-prev" class="ghost small">← Prev</button>
+            <button id="flash-next" class="primary small">Next →</button>
+          </div>
+        </div>
+
         <ul id="saved-list" class="list"></ul>
         <p id="saved-empty" class="empty hidden">Save difficult words from any analysis to build your study list.</p>
       </section>
@@ -87,6 +113,22 @@
           <span class="hint">We flag difficult words above this level.</span>
         </label>
 
+        <label class="toggle-field">
+          <input id="bubble-enabled" type="checkbox" />
+          <span class="toggle-text">
+            <span class="toggle-title">Show selection bubble on every site</span>
+            <span class="hint">Pick text on any page to see Analyze / Speak / Save shortcuts. Requires "read & change all sites" permission.</span>
+          </span>
+        </label>
+
+        <label class="toggle-field">
+          <input id="badge-enabled" type="checkbox" />
+          <span class="toggle-text">
+            <span class="toggle-title">Show study-list badge on toolbar</span>
+            <span class="hint">Counts saved words above your target level.</span>
+          </span>
+        </label>
+
         <label class="field">
           <span class="field-label">API URL</span>
           <input id="api-url" type="url" />
@@ -99,10 +141,11 @@
         </div>
 
         <div class="shortcut-card">
-          <p class="shortcut-title">Keyboard shortcut</p>
+          <p class="shortcut-title">Keyboard shortcuts</p>
           <p class="shortcut-body">
-            Press <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> on any page to analyze the selected text — or the whole page if nothing is selected.
-            Change it at <a href="#" id="open-shortcuts">chrome://extensions/shortcuts</a>.
+            <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>F</kbd> — analyze selection (or whole page)<br />
+            <kbd>Alt</kbd>+<kbd>Shift</kbd>+<kbd>S</kbd> — speak selection in French<br />
+            Change them at <a href="#" id="open-shortcuts">chrome://extensions/shortcuts</a>.
           </p>
         </div>
       </section>
