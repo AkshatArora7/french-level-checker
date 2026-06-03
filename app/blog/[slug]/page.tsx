@@ -24,6 +24,9 @@ export async function generateMetadata(
   return {
     title: `${post.title} — French Level Checker`,
     description: post.description,
+    keywords: post.primaryKeyword
+      ? [post.primaryKeyword, ...(post.secondaryKeywords ?? [])]
+      : post.secondaryKeywords,
     alternates: { canonical: url },
     openGraph: {
       title: post.title,
@@ -145,7 +148,10 @@ export default async function BlogPost(
           ]}
         />
         <h1 className="text-4xl font-bold mt-4 mb-2">{post.title}</h1>
-        <p className="text-sm text-gray-500 mb-6">{post.date}</p>
+        <p className="text-sm text-gray-500 mb-6">
+          {post.date}
+          {post.readingTime ? ` · ${post.readingTime}` : ""}
+        </p>
         <div className="prose-like">{renderMarkdown(post.body)}</div>
         <AdSlot slot="blog-end" />
         <div className="mt-12 p-6 border rounded-lg bg-blue-50">

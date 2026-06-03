@@ -4,6 +4,9 @@
   description: string;
   date: string;
   body: string;
+  readingTime?: string;
+  primaryKeyword?: string;
+  secondaryKeywords?: string[];
 };
 
 export const BLOG_POSTS: BlogPost[] = [
