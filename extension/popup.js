@@ -442,6 +442,15 @@ async function toggleBubble(want) {
 // ────────────────────────────────────────────────────────────
 document.addEventListener("DOMContentLoaded", async () => {
   $("open-site").href = FLC_SITE_URL;
+  try {
+    const v = chrome.runtime.getManifest().version;
+    $("version-badge").textContent = `v${v}`;
+    $("version-badge").title = `Click to view changelog`;
+    $("version-badge").style.cursor = "pointer";
+    $("version-badge").addEventListener("click", () => {
+      chrome.tabs.create({ url: `${FLC_SITE_URL}/extension/changelog` });
+    });
+  } catch {}
   await loadSettings();
 
   // Tabs

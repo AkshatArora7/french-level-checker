@@ -103,6 +103,19 @@ export default function SiteNav() {
 
           {/* Right side */}
           <div className="hidden lg:flex items-center gap-2">
+            <a
+              href="https://aatechax.com"
+              target="_blank"
+              rel="noopener"
+              className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors hover:opacity-100"
+              style={{ color: "var(--ink-faint)" }}
+              title="Visit aatechax.com — the maker's portfolio"
+            >
+              <ExternalIcon />
+              <span className="hidden xl:inline">aatechax.com</span>
+              <span className="xl:hidden">aatechax</span>
+            </a>
+
             <button
               onClick={() => {
                 play("tock");
@@ -237,6 +250,20 @@ export default function SiteNav() {
                   </Link>
                 );
               })}
+              <a
+                href="https://aatechax.com"
+                target="_blank"
+                rel="noopener"
+                className="flex items-center justify-between px-3 py-2.5 rounded-md text-sm font-medium transition-colors mt-1"
+                style={{ color: "var(--ink-soft)" }}
+              >
+                <span className="inline-flex items-center gap-2">
+                  <ExternalIcon /> aatechax.com
+                </span>
+                <span className="text-[10px] uppercase tracking-wider" style={{ color: "var(--ink-faint)" }}>
+                  maker
+                </span>
+              </a>
               <div className="flex items-center gap-2 mt-2 pt-2 border-t" style={{ borderColor: "var(--border)" }}>
                 <button
                   onClick={() => {
@@ -314,6 +341,27 @@ function NavLink({
         />
       )}
     </Link>
+  );
+}
+
+function ExternalIcon({ size = 12 }: { size?: number }) {
+  return (
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+      focusable="false"
+    >
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6" />
+      <polyline points="15 3 21 3 21 9" />
+      <line x1="10" y1="14" x2="21" y2="3" />
+    </svg>
   );
 }
 

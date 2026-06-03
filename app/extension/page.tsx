@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SITE_URL, SITE_NAME } from "@/lib/site";
+import { EXTENSION_VERSION } from "@/lib/extension-version";
 
 const TITLE = "Install the Chrome Extension — French Level Checker";
 const DESCRIPTION =
@@ -113,13 +114,21 @@ export default function ExtensionPage() {
               "0 1px 2px rgba(5,150,105,0.2), 0 8px 24px -4px color-mix(in srgb, var(--accent) 40%, transparent)",
           }}
         >
-          ⬇ Download Extension (.zip)
+          ⬇ Download Extension v{EXTENSION_VERSION} (.zip)
         </a>
         <p
           className="text-xs text-center mt-2"
           style={{ color: "var(--ink-faint)" }}
         >
-          Then follow the steps below to load it into your browser.
+          Version {EXTENSION_VERSION} ·{" "}
+          <Link
+            href="/extension/changelog"
+            className="underline decoration-dotted underline-offset-2 hover:no-underline"
+            style={{ color: "var(--ink-faint)" }}
+          >
+            What&apos;s new
+          </Link>{" "}
+          · Then follow the steps below to load it into your browser.
         </p>
 
         <section className="mt-12">

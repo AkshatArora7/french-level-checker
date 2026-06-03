@@ -12,6 +12,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE_URL}/tools`,         lastModified: now, changeFrequency: "weekly",  priority: 0.9 },
     { url: `${SITE_URL}/resources`,     lastModified: now, changeFrequency: "monthly", priority: 0.9 },
     { url: `${SITE_URL}/extension`,     lastModified: now, changeFrequency: "monthly", priority: 0.9 },
+    { url: `${SITE_URL}/extension/changelog`, lastModified: now, changeFrequency: "monthly", priority: 0.4 },
     { url: `${SITE_URL}/jeu`,           lastModified: now, changeFrequency: "daily",   priority: 0.8 },
     { url: `${SITE_URL}/mot-du-jour`,   lastModified: now, changeFrequency: "daily",   priority: 0.8 },
     { url: `${SITE_URL}/learn`,         lastModified: now, changeFrequency: "monthly", priority: 0.8 },

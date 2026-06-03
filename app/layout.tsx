@@ -152,7 +152,19 @@ export default function RootLayout({
                     style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
                   >
                     <span>© {new Date().getFullYear()} {SITE_NAME}</span>
-                    <span>Built with Next.js, Tailwind & Motion</span>
+                    <span>
+                      A project by{" "}
+                      <a
+                        href="https://aatechax.com"
+                        target="_blank"
+                        rel="noopener"
+                        className="underline decoration-dotted underline-offset-2 hover:no-underline"
+                        style={{ color: "var(--accent)" }}
+                      >
+                        aatechax.com
+                      </a>
+                    </span>
+                    <span>Built with Next.js, Tailwind &amp; Motion</span>
                   </div>
                 </div>
               </footer>
