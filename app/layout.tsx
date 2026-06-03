@@ -155,7 +155,7 @@ export default function RootLayout({
                     <span>
                       A project by{" "}
                       <a
-                        href="https://aatechax.com"
+                        href="https://aatechax.com/#projects"
                         target="_blank"
                         rel="noopener"
                         className="underline decoration-dotted underline-offset-2 hover:no-underline"

@@ -104,7 +104,7 @@ export default function SiteNav() {
           {/* Right side */}
           <div className="hidden lg:flex items-center gap-2">
             <a
-              href="https://aatechax.com"
+              href="https://aatechax.com/#projects"
               target="_blank"
               rel="noopener"
               className="inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-colors hover:opacity-100"
@@ -251,7 +251,7 @@ export default function SiteNav() {
                 );
               })}
               <a
-                href="https://aatechax.com"
+                href="https://aatechax.com/#projects"
                 target="_blank"
                 rel="noopener"
                 className="flex items-center justify-between px-3 py-2.5 rounded-md text-sm font-medium transition-colors mt-1"
